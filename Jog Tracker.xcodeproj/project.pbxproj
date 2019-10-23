@@ -57,8 +57,6 @@
 				8E7141B223609AB4005968AA /* Controller */,
 				8E7141B323609ABD005968AA /* View */,
 				8E7141B423609AC8005968AA /* Supporting Files */,
-				8E7141A923609698005968AA /* LaunchScreen.storyboard */,
-				8E7141A423609686005968AA /* Main.storyboard */,
 			);
 			path = "Jog Tracker";
 			sourceTree = "<group>";
@@ -74,6 +72,7 @@
 		8E7141B323609ABD005968AA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8E7141A423609686005968AA /* Main.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -81,6 +80,7 @@
 		8E7141B423609AC8005968AA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8E7141A923609698005968AA /* LaunchScreen.storyboard */,
 				8E71419E23609686005968AA /* AppDelegate.swift */,
 				8E7141A723609698005968AA /* Assets.xcassets */,
 				8E7141AC23609698005968AA /* Info.plist */,
