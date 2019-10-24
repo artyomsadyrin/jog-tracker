@@ -66,24 +66,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         self.performSegue(withIdentifier: "Show Jogs", sender: self)
         print("Login success")
     }
-    
-    // MARK: Navigation
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
-        
-        switch identifier {
-        case "Show Jogs":
-            if isLoginSuccess {
-                print("Segued to JogsVC")
-                return true
-            } else {
-                return false
-            }
-        default:
-            return true
-        }
-    }
 
 }
 
