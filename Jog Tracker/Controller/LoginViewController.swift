@@ -15,7 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
  
     private var tempLoginCreds = ["hello"]
     @IBOutlet weak var uuidTextField: UITextField!
-    
+    private var isLoginSuccess = false
     fileprivate enum LoginError: Error {
         case emptyField
         case noSuchUser
@@ -53,14 +53,36 @@ class LoginViewController: UIViewController, UITextFieldDelegate
 
     @IBAction func logIn(_ sender: UIButton) {
         guard let uuid = uuidTextField.text, !uuid.isEmpty else {
+            isLoginSuccess = false
             showErrorAlert(error: LoginError.emptyField)
             return
         }
         guard tempLoginCreds.contains(uuid) else {
+            isLoginSuccess = false
             showErrorAlert(error: LoginError.noSuchUser)
             return
         }
+        isLoginSuccess = true
+        self.performSegue(withIdentifier: "Show Jogs", sender: self)
         print("Login success")
+    }
+    
+    // MARK: Navigation
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
+        
+        switch identifier {
+        case "Show Jogs":
+            if isLoginSuccess {
+                print("Segued to JogsVC")
+                return true
+            } else {
+                return false
+            }
+        default:
+            return true
+        }
     }
 
 }

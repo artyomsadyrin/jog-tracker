@@ -28,7 +28,7 @@
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your UUID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kc9-xa-3qY">
                                         <rect key="frame" x="0.0" y="0.0" width="334" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20o-fj-fgu">
                                         <rect key="frame" x="0.0" y="74" width="334" height="34"/>
@@ -52,11 +52,99 @@
                     </view>
                     <connections>
                         <outlet property="uuidTextField" destination="kc9-xa-3qY" id="LSO-Ap-fkk"/>
+                        <segue destination="ixz-OV-Tcv" kind="show" identifier="Show Jogs" id="fUg-0b-QT9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="91.741071428571431"/>
+        </scene>
+        <!--Jog Workouts-->
+        <scene sceneID="wjV-ZS-Cpc">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="pGy-Jk-7FS" customClass="JogsViewController" customModule="Jog_Tracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wk3-8R-w6j">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="Z4H-wi-aHk"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Jog Workouts" id="kFS-PY-jKQ">
+                        <barButtonItem key="leftBarButtonItem" title="&lt; Login" id="O5a-8L-1oa">
+                            <connections>
+                                <action selector="backBarButtonItemPressed:" destination="pGy-Jk-7FS" id="mml-G2-VVQ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="q00-ZY-xdE">
+                            <connections>
+                                <segue destination="MG2-vs-RyI" kind="presentation" identifier="Add Jog" modalPresentationStyle="fullScreen" id="nKo-ip-eiR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rHi-VK-Kn4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2243" y="92"/>
+        </scene>
+        <!--Jog Workout-->
+        <scene sceneID="tnq-lZ-2uG">
+            <objects>
+                <viewController id="GUW-RA-hKp" customClass="EditJogViewController" customModule="Jog_Tracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="t2B-ln-4kC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="nfn-8L-TkJ"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Jog Workout" id="kdW-yU-yyw">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="6p4-tg-beJ">
+                            <connections>
+                                <action selector="cancel:" destination="GUW-RA-hKp" id="IAt-eD-qzQ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="V99-oV-DA3"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fcL-kB-j4r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4291" y="92"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="lpM-v0-AaI">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="ixz-OV-Tcv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="HfP-2N-mpP"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="XVc-ni-KQi">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="pGy-Jk-7FS" kind="relationship" relationship="rootViewController" id="RMg-21-0us"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C63-Kl-sk2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1312" y="92"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="AnP-Uc-KrK">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="MG2-vs-RyI" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="xPP-Di-W7Q">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="GUW-RA-hKp" kind="relationship" relationship="rootViewController" id="MkO-XC-Wp8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v3V-Q1-yfa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3283" y="92"/>
         </scene>
     </scenes>
 </document>
