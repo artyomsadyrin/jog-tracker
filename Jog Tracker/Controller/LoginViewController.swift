@@ -12,13 +12,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate
 {
     
     // MARK: Properties
- 
-    private var tempLoginCreds = ["hello"]
+
+    var authResponse: AuthResponse?
+    var isLoginSuccess = false
     @IBOutlet weak var uuidTextField: UITextField!
-    private var isLoginSuccess = false
     fileprivate enum LoginError: Error {
         case emptyField
-        case noSuchUser
+        case unknownSegue
     }
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
@@ -55,27 +55,48 @@ class LoginViewController: UIViewController, UITextFieldDelegate
 
     @IBAction func logIn(_ sender: UIButton) {
         guard let uuid = uuidTextField.text, !uuid.isEmpty else {
-            isLoginSuccess = false
             showErrorAlert(error: LoginError.emptyField)
             return
         }
+        spinner.isHidden = false
         spinner.startAnimating()
-        
-        NetworkManager.logIn(uuid: uuid) { [weak self] result in
+        NetworkManager.uuidLogin(uuid: uuid) { [weak self] result in
             switch result {
             case .success(let authResponse):
                 DispatchQueue.main.async {
                     self?.spinner.stopAnimating()
                     self?.isLoginSuccess = true
-                    self?.performSegue(withIdentifier: "Show Jogs", sender: self)
-                    print("Login success\nAccess Token:\n\(authResponse.accessToken ?? "wrong token")")
+                    self?.authResponse = authResponse
+                    self?.performSegue(withIdentifier: "Show Jogs", sender: nil)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
+                    self?.isLoginSuccess = false
                     self?.spinner.stopAnimating()
                     self?.showErrorAlert(error: error)
                 }
             }
+        }
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if isLoginSuccess {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        switch segue.identifier {
+        case "Show Jogs":
+            if let jogsVC = segue.destination.contents as? JogsViewController {
+                jogsVC.accessToken = authResponse?.accessToken
+            }
+        default:
+            showErrorAlert(error: LoginError.unknownSegue)
         }
     }
 
@@ -85,9 +106,9 @@ extension LoginViewController.LoginError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyField:
-            return NSLocalizedString("Text field is empty. Please enter your UUID.", comment: "Empty Field")
-        case .noSuchUser:
-            return NSLocalizedString("Can't find a user with given UUID.", comment: "No Such User")
+            return NSLocalizedString("Text field is empty.\nPlease enter your UUID.", comment: "Login Failed")
+        case .unknownSegue:
+            return NSLocalizedString("Unexpected Segue Identifier.\nPlease report to the developer", comment: "Login Failed")
         }
     }
 }

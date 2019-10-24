@@ -10,7 +10,7 @@ import UIKit
 
 class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
-    
+
     // MARK: Properties
     
     private struct Jog {
@@ -20,6 +20,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
     
     private var jogs: [Jog] = [
@@ -37,6 +38,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.modalPresentationStyle = .fullScreen
         jogsTableView.delegate = self
         jogsTableView.dataSource = self
+        print("JogsVC: Access Token\n\(accessToken ?? "wrong token")")
     }
     
     // MARK: Action Methods
@@ -44,7 +46,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func backBarButtonItemPressed(_ sender: UIBarButtonItem) {
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
-    
+
     // MARK: Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -78,4 +80,14 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     */
 
+}
+
+extension UIViewController {
+    var contents: UIViewController {
+        if let navcon = self as? UINavigationController {
+            return navcon.visibleViewController ?? self
+        } else {
+            return self
+        }
+    }
 }

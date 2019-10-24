@@ -44,7 +44,7 @@
                                 <color key="color" cocoaTouchSystemColor="darkTextColor"/>
                             </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" red="0.99953407049999998" green="0.98835557699999999" blue="0.47265523669999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="8vt-r1-OGL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="222-83-LlQ"/>
                             <constraint firstItem="tZX-7M-mnE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4bw-ce-N2Y"/>

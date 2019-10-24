@@ -8,8 +8,13 @@
 
 import Foundation
 
-class NetworkManager {
-    static func logIn(uuid: String, completionHandler: @escaping (Result<AuthResponse, Error>) -> () ) {
+class NetworkManager
+{
+    
+    // MARK: POST /v1/auth/uuidLogin
+    
+    static func uuidLogin(uuid: String, completionHandler: @escaping (Result<AuthResponse, Error>) -> () )
+    {
         
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/auth/uuidLogin")
         
@@ -66,6 +71,14 @@ class NetworkManager {
         }
         
         datatask.resume()
+    }
+    
+    // MARK: GET /v1/auth/user
+    
+    static func getUser(completionHandler: @escaping (Result<User, Error>) -> () )
+    {
+        
+        
     }
     
     
