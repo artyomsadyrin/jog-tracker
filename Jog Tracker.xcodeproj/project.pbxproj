@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */; };
 		8E3E6BE42361A2F80001D915 /* JogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */; };
+		8E3E6BE72361C2D30001D915 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE62361C2D30001D915 /* NetworkManager.swift */; };
+		8E3E6BE92361C9B70001D915 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE82361C9B70001D915 /* AuthResponse.swift */; };
+		8E3E6BEC2361CA750001D915 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BEB2361CA750001D915 /* User.swift */; };
 		8E71419F23609686005968AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E71419E23609686005968AA /* AppDelegate.swift */; };
 		8E7141A323609686005968AA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7141A223609686005968AA /* LoginViewController.swift */; };
 		8E7141A623609686005968AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7141A423609686005968AA /* Main.storyboard */; };
@@ -20,6 +23,9 @@
 /* Begin PBXFileReference section */
 		8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditJogViewController.swift; sourceTree = "<group>"; };
 		8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JogTableViewCell.swift; sourceTree = "<group>"; };
+		8E3E6BE62361C2D30001D915 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		8E3E6BE82361C9B70001D915 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
+		8E3E6BEB2361CA750001D915 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8E71419B23609686005968AA /* Jog Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jog Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E71419E23609686005968AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E7141A223609686005968AA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +47,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E3E6BE52361C2AB0001D915 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8E3E6BE62361C2D30001D915 /* NetworkManager.swift */,
+				8E3E6BE82361C9B70001D915 /* AuthResponse.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8E3E6BEA2361CA5E0001D915 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8E3E6BEB2361CA750001D915 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		8E71419223609685005968AA = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +83,8 @@
 		8E71419D23609686005968AA /* Jog Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				8E3E6BEA2361CA5E0001D915 /* Model */,
+				8E3E6BE52361C2AB0001D915 /* Services */,
 				8E7141B223609AB4005968AA /* Controller */,
 				8E7141B323609ABD005968AA /* View */,
 				8E7141B423609AC8005968AA /* Supporting Files */,
@@ -168,9 +193,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E3E6BE72361C2D30001D915 /* NetworkManager.swift in Sources */,
 				8E7141A323609686005968AA /* LoginViewController.swift in Sources */,
 				8E71419F23609686005968AA /* AppDelegate.swift in Sources */,
 				8E7D58AB2361964600852316 /* JogsViewController.swift in Sources */,
+				8E3E6BEC2361CA750001D915 /* User.swift in Sources */,
+				8E3E6BE92361C9B70001D915 /* AuthResponse.swift in Sources */,
 				8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */,
 				8E3E6BE42361A2F80001D915 /* JogTableViewCell.swift in Sources */,
 			);

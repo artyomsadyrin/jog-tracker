@@ -39,18 +39,25 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Za9-cA-59H">
+                                <rect key="frame" x="188.5" y="240" width="37" height="37"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="8vt-r1-OGL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="222-83-LlQ"/>
                             <constraint firstItem="tZX-7M-mnE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4bw-ce-N2Y"/>
                             <constraint firstItem="8vt-r1-OGL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="8tN-oK-E9I"/>
+                            <constraint firstItem="Za9-cA-59H" firstAttribute="top" secondItem="8vt-r1-OGL" secondAttribute="bottom" constant="100" id="aVd-tp-rgO"/>
                             <constraint firstItem="tZX-7M-mnE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="ac9-Ir-Lfc"/>
+                            <constraint firstItem="Za9-cA-59H" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ynd-aE-dXx"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tZX-7M-mnE" secondAttribute="trailing" constant="40" id="zJN-x4-OHW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="spinner" destination="Za9-cA-59H" id="nWy-4f-kg7"/>
                         <outlet property="uuidTextField" destination="kc9-xa-3qY" id="LSO-Ap-fkk"/>
                         <segue destination="ixz-OV-Tcv" kind="show" identifier="Show Jogs" id="fUg-0b-QT9"/>
                     </connections>

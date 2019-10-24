@@ -20,6 +20,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         case emptyField
         case noSuchUser
     }
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
     
     // MARK: General Methods
 
@@ -57,14 +59,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate
             showErrorAlert(error: LoginError.emptyField)
             return
         }
-        guard tempLoginCreds.contains(uuid) else {
-            isLoginSuccess = false
-            showErrorAlert(error: LoginError.noSuchUser)
-            return
+        spinner.startAnimating()
+        
+        NetworkManager.logIn(uuid: uuid) { [weak self] result in
+            switch result {
+            case .success(let authResponse):
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.isLoginSuccess = true
+                    self?.performSegue(withIdentifier: "Show Jogs", sender: self)
+                    print("Login success\nAccess Token:\n\(authResponse.accessToken ?? "wrong token")")
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.showErrorAlert(error: error)
+                }
+            }
         }
-        isLoginSuccess = true
-        self.performSegue(withIdentifier: "Show Jogs", sender: self)
-        print("Login success")
     }
 
 }

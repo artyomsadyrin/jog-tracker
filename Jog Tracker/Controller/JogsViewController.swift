@@ -14,7 +14,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: Properties
     
     private struct Jog {
-        let identifier: String = UUID().uuidString
         var distance: Double
         var time: Int
         var date: String
@@ -60,7 +59,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             fatalError("The dequeued cell is not an instance of JogTableViewCell.")
         }
         let jog = jogs[indexPath.row]
-        cell.identifierLabel.text = "Jog #\(jog.identifier)"
+        cell.identifierLabel.text = "Jog #\(indexPath.row)"
         cell.distanceLabel.text = "Distance: \(jog.distance)"
         cell.timeLabel.text = "Time: \(jog.time)"
         cell.dateLabel.text = "Date: \(jog.date)"
