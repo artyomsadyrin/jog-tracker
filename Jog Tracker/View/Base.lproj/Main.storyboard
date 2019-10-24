@@ -16,25 +16,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kc9-xa-3qY">
-                                <rect key="frame" x="40" y="431" width="334" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20o-fj-fgu">
-                                <rect key="frame" x="184" y="497" width="46" height="30"/>
-                                <state key="normal" title="Log In"/>
-                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jog Tracker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8vt-r1-OGL">
+                                <rect key="frame" x="108.5" y="92" width="197.5" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="tZX-7M-mnE">
+                                <rect key="frame" x="40" y="394" width="334" height="108"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kc9-xa-3qY">
+                                        <rect key="frame" x="0.0" y="0.0" width="334" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20o-fj-fgu">
+                                        <rect key="frame" x="0.0" y="74" width="334" height="34"/>
+                                        <state key="normal" title="Log In">
+                                            <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="20o-fj-fgu" firstAttribute="top" secondItem="kc9-xa-3qY" secondAttribute="bottom" constant="32" id="7VQ-Zx-nba"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="kc9-xa-3qY" secondAttribute="trailing" constant="40" id="832-vm-Dec"/>
-                            <constraint firstItem="20o-fj-fgu" firstAttribute="width" secondItem="kc9-xa-3qY" secondAttribute="height" multiplier="23:17" id="Fok-F2-z99"/>
-                            <constraint firstItem="kc9-xa-3qY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PCF-DC-IB5"/>
-                            <constraint firstItem="20o-fj-fgu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fa8-QJ-aBd"/>
-                            <constraint firstItem="kc9-xa-3qY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pdW-v7-VVN"/>
-                            <constraint firstItem="kc9-xa-3qY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="uWh-em-zEW"/>
+                            <constraint firstItem="8vt-r1-OGL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="222-83-LlQ"/>
+                            <constraint firstItem="tZX-7M-mnE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4bw-ce-N2Y"/>
+                            <constraint firstItem="8vt-r1-OGL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="8tN-oK-E9I"/>
+                            <constraint firstItem="tZX-7M-mnE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="ac9-Ir-Lfc"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tZX-7M-mnE" secondAttribute="trailing" constant="40" id="zJN-x4-OHW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
