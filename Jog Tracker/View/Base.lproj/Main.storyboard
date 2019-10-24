@@ -35,6 +35,7 @@
                                         <state key="normal" title="Log In"/>
                                         <connections>
                                             <action selector="logIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7wx-9L-kW2"/>
+                                            <segue destination="ixz-OV-Tcv" kind="show" identifier="Show Jogs" id="mIV-Tw-73q"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -59,7 +60,6 @@
                     <connections>
                         <outlet property="spinner" destination="Za9-cA-59H" id="nWy-4f-kg7"/>
                         <outlet property="uuidTextField" destination="kc9-xa-3qY" id="LSO-Ap-fkk"/>
-                        <segue destination="ixz-OV-Tcv" kind="show" identifier="Show Jogs" id="fUg-0b-QT9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

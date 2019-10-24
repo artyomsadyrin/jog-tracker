@@ -30,6 +30,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         uuidTextField.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        isLoginSuccess = false
+    }
+    
     // MARK: Private Methods
     
     private func showErrorAlert(error: Error) {
