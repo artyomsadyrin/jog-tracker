@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */; };
+		8E3E6BE42361A2F80001D915 /* JogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */; };
 		8E71419F23609686005968AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E71419E23609686005968AA /* AppDelegate.swift */; };
 		8E7141A323609686005968AA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7141A223609686005968AA /* LoginViewController.swift */; };
 		8E7141A623609686005968AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7141A423609686005968AA /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditJogViewController.swift; sourceTree = "<group>"; };
+		8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JogTableViewCell.swift; sourceTree = "<group>"; };
 		8E71419B23609686005968AA /* Jog Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jog Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E71419E23609686005968AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E7141A223609686005968AA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				8E7141A423609686005968AA /* Main.storyboard */,
+				8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 				8E71419F23609686005968AA /* AppDelegate.swift in Sources */,
 				8E7D58AB2361964600852316 /* JogsViewController.swift in Sources */,
 				8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */,
+				8E3E6BE42361A2F80001D915 /* JogTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

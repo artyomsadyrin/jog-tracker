@@ -66,7 +66,72 @@
                     <view key="view" contentMode="scaleToFill" id="wk3-8R-w6j">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GT5-3n-0r5">
+                                <rect key="frame" x="0.0" y="56" width="414" height="752"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="JogTableViewCell" id="dNh-Mt-uiA" customClass="JogTableViewCell" customModule="Jog_Tracker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="116.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dNh-Mt-uiA" id="7JJ-PL-OjE">
+                                            <rect key="frame" x="0.0" y="0.0" width="370" height="116.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="oYB-tx-sc8">
+                                                    <rect key="frame" x="20" y="11" width="67" height="94.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jog ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2F-G9-aTE">
+                                                            <rect key="frame" x="0.0" y="0.0" width="67" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJ3-UJ-BY4">
+                                                            <rect key="frame" x="0.0" y="24.5" width="67" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMi-KI-DtR">
+                                                            <rect key="frame" x="0.0" y="49" width="67" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PDP-7M-k6a">
+                                                            <rect key="frame" x="0.0" y="74" width="67" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="oYB-tx-sc8" firstAttribute="top" secondItem="7JJ-PL-OjE" secondAttribute="topMargin" id="11O-y7-skw"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="oYB-tx-sc8" secondAttribute="bottom" id="I3c-hV-Hku"/>
+                                                <constraint firstItem="oYB-tx-sc8" firstAttribute="leading" secondItem="7JJ-PL-OjE" secondAttribute="leadingMargin" id="O83-qb-qK4"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="oYB-tx-sc8" secondAttribute="trailing" constant="21" id="w3J-EW-Nfq"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="PDP-7M-k6a" id="aRE-l2-dvm"/>
+                                            <outlet property="distanceLabel" destination="eJ3-UJ-BY4" id="IlY-gx-PZt"/>
+                                            <outlet property="identifierLabel" destination="R2F-G9-aTE" id="Oaz-nc-jzl"/>
+                                            <outlet property="timeLabel" destination="zMi-KI-DtR" id="PHr-W9-h4i"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Z4H-wi-aHk" firstAttribute="bottom" secondItem="GT5-3n-0r5" secondAttribute="bottom" id="3hx-X5-s70"/>
+                            <constraint firstItem="Z4H-wi-aHk" firstAttribute="trailing" secondItem="GT5-3n-0r5" secondAttribute="trailing" id="HMe-Cv-Eay"/>
+                            <constraint firstItem="GT5-3n-0r5" firstAttribute="leading" secondItem="Z4H-wi-aHk" secondAttribute="leading" id="IIt-zm-0Wi"/>
+                            <constraint firstItem="GT5-3n-0r5" firstAttribute="top" secondItem="Z4H-wi-aHk" secondAttribute="top" id="b4i-JC-uhX"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Z4H-wi-aHk"/>
                     </view>
                     <navigationItem key="navigationItem" title="Jog Workouts" id="kFS-PY-jKQ">
@@ -81,10 +146,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="jogsTableView" destination="GT5-3n-0r5" id="1ru-4g-o1C"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rHi-VK-Kn4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2243" y="92"/>
+            <point key="canvasLocation" x="2242.0289855072465" y="91.741071428571431"/>
         </scene>
         <!--Jog Workout-->
         <scene sceneID="tnq-lZ-2uG">
