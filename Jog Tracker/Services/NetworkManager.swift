@@ -63,7 +63,7 @@ class NetworkManager
             
             if let data = data {
                 if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("UUID Login JSON Result:\n\(String(describing: dataString))")
+                    print("UUID Login. JSON Result:\n\(String(describing: dataString))")
                 }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -118,7 +118,7 @@ class NetworkManager
             
             if let data = data {
                 if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("Get User JSON Result:\n\(String(describing: dataString))")
+                    print("Get User. JSON Result:\n\(String(describing: dataString))")
                 }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -135,6 +135,59 @@ class NetworkManager
         
     }
     
+    
+    static func syncUsersAndJogs(accessToken: String, completionHandler: @escaping (Result<Response, Error>) -> () )
+    {
+        let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/data/sync")
+        
+        guard let url = requestURL else {
+            completionHandler(.failure(NetworkError.wrongURL))
+            return
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        
+        let datatask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+            
+            if let error = error {
+                DispatchQueue.main.async {
+                    completionHandler(.failure(error))
+                }
+            }
+            
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 400:
+                    completionHandler(.failure(NetworkError.clientError))
+                case 500:
+                    completionHandler(.failure(NetworkError.internalServerError))
+                default:
+                    break
+                }
+            }
+            
+            if let data = data {
+                if let dataString = String(data: data, encoding: String.Encoding.utf8) {
+                    print("Sync Users And Jogs. JSON Result:\n\(String(describing: dataString))")
+                }
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let codingData = try? decoder.decode(Response.CodingData.self, from: data)
+                if let codingData = codingData {
+                    completionHandler(.success(codingData.passedResponse))
+                } else {
+                    completionHandler(.failure(NetworkError.failedDecodeFromJSON))
+                }
+            }
+        }
+        
+        datatask.resume()
+    }
     
 }
 

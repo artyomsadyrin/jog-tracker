@@ -17,7 +17,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var jogsTableView: UITableView!
     
     private var user: User?
-    private var jogs = [Jog]()
+    private var jogs: [Jog]?
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     // MARK: General Methods
@@ -56,7 +56,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return jogs.count
+        return jogs?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -66,11 +66,21 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? JogTableViewCell else {
             fatalError("The dequeued cell is not an instance of JogTableViewCell.")
         }
+        
+        guard let jogs = jogs else {
+            return cell
+        }
+        
         let jog = jogs[indexPath.row]
-        cell.identifierLabel.text = "Jog #\(indexPath.row)"
-        cell.distanceLabel.text = "Distance: \(jog.distance)"
-        cell.timeLabel.text = "Time: \(jog.time)"
-        cell.dateLabel.text = "Date: \(jog.date)"
+        
+        guard let identifier = jog.id, let distance = jog.distance, let time = jog.time, let date = jog.date else {
+            return cell
+        }
+        
+        cell.identifierLabel.text = "Jog #\(identifier)"
+        cell.distanceLabel.text = "Distance: \(distance)"
+        cell.timeLabel.text = "Time: \(time)"
+        cell.dateLabel.text = "Date: \(date)"
         
         return cell
     }
@@ -84,14 +94,37 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
-                    self?.spinner.stopAnimating()
                     self?.user = user
-                    print("JogsVC. Get User Success. User: \(user.firstName ?? "wrong first name")")
+                    print("Get User Success. User: \(user.firstName ?? "wrong first name")")
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        self?.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                    }
                 }
             case .failure(let error):
-                self?.spinner.stopAnimating()
-                self?.showErrorAlert(error: error)
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.showErrorAlert(error: error)
+                }
             }
+        }
+    }
+    
+    private func syncUsersAndJogs(accessToken: String, passedUser: User) {
+        NetworkManager.syncUsersAndJogs(accessToken: accessToken) { [weak self] result in
+            switch result {
+            case .success(let response):
+                    self?.jogs = response.jogs.filter { $0.userId == passedUser.id }
+                    DispatchQueue.main.async {
+                        self?.spinner.stopAnimating()
+                        self?.jogsTableView.reloadData()
+                        print("Sync jogs and user success")
+                    }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.showErrorAlert(error: error)
+                }
+            }
+            
         }
     }
     
