@@ -22,16 +22,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="tZX-7M-mnE">
-                                <rect key="frame" x="40" y="394" width="334" height="108"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="tZX-7M-mnE">
+                                <rect key="frame" x="40" y="402" width="334" height="92"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your UUID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kc9-xa-3qY">
                                         <rect key="frame" x="0.0" y="0.0" width="334" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="go"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20o-fj-fgu">
-                                        <rect key="frame" x="0.0" y="74" width="334" height="34"/>
+                                        <rect key="frame" x="0.0" y="58" width="334" height="34"/>
                                         <state key="normal" title="Log In"/>
                                         <connections>
                                             <action selector="logIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7wx-9L-kW2"/>
@@ -41,21 +41,68 @@
                                 </subviews>
                             </stackView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Za9-cA-59H">
-                                <rect key="frame" x="188.5" y="240" width="37" height="37"/>
+                                <rect key="frame" x="40" y="200" width="334" height="37"/>
                                 <color key="color" cocoaTouchSystemColor="darkTextColor"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.99953407049999998" green="0.98835557699999999" blue="0.47265523669999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Za9-cA-59H" secondAttribute="trailing" constant="385.5" id="09P-u4-5uY">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
                             <constraint firstItem="8vt-r1-OGL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="222-83-LlQ"/>
-                            <constraint firstItem="tZX-7M-mnE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4bw-ce-N2Y"/>
-                            <constraint firstItem="8vt-r1-OGL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="8tN-oK-E9I"/>
-                            <constraint firstItem="Za9-cA-59H" firstAttribute="top" secondItem="8vt-r1-OGL" secondAttribute="bottom" constant="100" id="aVd-tp-rgO"/>
+                            <constraint firstItem="tZX-7M-mnE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-50" id="4bw-ce-N2Y">
+                                <variation key="heightClass=regular" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="8vt-r1-OGL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="8tN-oK-E9I">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
+                            <constraint firstItem="tZX-7M-mnE" firstAttribute="top" relation="greaterThanOrEqual" secondItem="8vt-r1-OGL" secondAttribute="bottom" constant="32" id="9Xt-ua-A2o">
+                                <variation key="heightClass=compact" constant="25"/>
+                            </constraint>
+                            <constraint firstItem="Za9-cA-59H" firstAttribute="top" secondItem="8vt-r1-OGL" secondAttribute="bottom" constant="60" id="aVd-tp-rgO"/>
                             <constraint firstItem="tZX-7M-mnE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="ac9-Ir-Lfc"/>
+                            <constraint firstItem="Za9-cA-59H" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="135" id="gw9-m8-66u">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Za9-cA-59H" secondAttribute="trailing" constant="578.5" id="jVp-p6-qYR">
+                                <variation key="heightClass=regular" constant="40"/>
+                            </constraint>
+                            <constraint firstItem="Za9-cA-59H" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="156" id="knb-mF-382"/>
+                            <constraint firstItem="tZX-7M-mnE" firstAttribute="top" secondItem="Za9-cA-59H" secondAttribute="bottom" constant="30" id="kwD-4F-sLn">
+                                <variation key="heightClass=compact" constant="24"/>
+                            </constraint>
                             <constraint firstItem="Za9-cA-59H" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ynd-aE-dXx"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tZX-7M-mnE" secondAttribute="trailing" constant="40" id="zJN-x4-OHW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="09P-u4-5uY"/>
+                                <exclude reference="jVp-p6-qYR"/>
+                                <exclude reference="kwD-4F-sLn"/>
+                                <exclude reference="gw9-m8-66u"/>
+                                <exclude reference="knb-mF-382"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="09P-u4-5uY"/>
+                                <exclude reference="4bw-ce-N2Y"/>
+                                <exclude reference="9Xt-ua-A2o"/>
+                                <include reference="kwD-4F-sLn"/>
+                                <exclude reference="aVd-tp-rgO"/>
+                                <include reference="gw9-m8-66u"/>
+                                <exclude reference="ynd-aE-dXx"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="jVp-p6-qYR"/>
+                                <exclude reference="aVd-tp-rgO"/>
+                                <include reference="knb-mF-382"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="spinner" destination="Za9-cA-59H" id="nWy-4f-kg7"/>
@@ -75,7 +122,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GT5-3n-0r5">
-                                <rect key="frame" x="0.0" y="56" width="414" height="752"/>
+                                <rect key="frame" x="0.0" y="108" width="414" height="734"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="JogTableViewCell" id="dNh-Mt-uiA" customClass="JogTableViewCell" customModule="Jog_Tracker" customModuleProvider="target">

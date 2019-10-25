@@ -52,12 +52,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate
     // MARK: Text Field Delegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        logInWithUUID()
         return textField.resignFirstResponder()
     }
     
-    // MARK: Action Methods
-
-    @IBAction func logIn(_ sender: UIButton) {
+    // MARK: Network Methods
+    
+    private func logInWithUUID() {
         guard let uuid = uuidTextField.text, !uuid.isEmpty else {
             showErrorAlert(error: LoginError.emptyField)
             return
@@ -82,6 +83,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate
             }
         }
     }
+    
+    // MARK: Action Methods
+
+    @IBAction func logIn(_ sender: UIButton) {
+        logInWithUUID()
+    }
+    
+    // MARK: Navigation
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if isLoginSuccess {
