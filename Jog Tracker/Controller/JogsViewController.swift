@@ -35,7 +35,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             getUser(accessToken: accessToken)
         }
         jogsTableView.refreshControl = jogsRefreshControl
-        jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView), for: .valueChanged)
+        jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView(_:)), for: .valueChanged)
     }
     
     // MARK: Action Methods
@@ -59,10 +59,27 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true)
     }
     
-    @objc private func refreshJogsTableView() {
+    @objc private func refreshJogsTableView(_ sender: Any?) {
         if let accessToken = accessToken, let user = user {
             syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+            jogsRefreshControl.endRefreshing()
         }
+    }
+    
+    private func startActivityIndicator() {
+        jogsTableView.isUserInteractionEnabled = false
+        jogsTableView.alpha = 0.5
+        addJogButton.isEnabled = false
+        spinner.isHidden = false
+        spinner.startAnimating()
+    }
+    
+    private func stopActivityIndicator() {
+        jogsTableView.isUserInteractionEnabled = true
+        jogsTableView.alpha = 1.0
+        addJogButton.isEnabled = true
+        spinner.stopAnimating()
+        jogsTableView.reloadData()
     }
 
     // MARK: Table View Data Source
@@ -101,11 +118,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if editingStyle == .delete {
             if let deletedJog = jogs?[indexPath.row], let accessToken = accessToken {
                 jogs?.remove(at: indexPath.row)
-                jogsTableView.isUserInteractionEnabled = false
-                jogsTableView.alpha = 0.5
-                addJogButton.isEnabled = false
-                spinner.isHidden = false
-                spinner.startAnimating()
+                startActivityIndicator()
                 deleteJog(passedJog: deletedJog, accessToken: accessToken)
             }
         }
@@ -114,40 +127,54 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: Network Methods
     
     private func getUser(accessToken: String) {
-        spinner.isHidden = false
-        spinner.startAnimating()
+        DispatchQueue.main.async { [weak self] in
+            self?.startActivityIndicator()
+        }
         NetworkManager.getUser(accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
-                    self?.user = user
+                    self.user = user
                     print("Get User Success. User: \(user.firstName ?? "wrong first name")")
                     DispatchQueue.global(qos: .userInitiated).async {
-                        self?.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.spinner.stopAnimating()
-                    self?.showErrorAlert(error: error)
+                    self.spinner.stopAnimating()
+                    self.showErrorAlert(error: error)
                 }
             }
         }
     }
     
     private func syncUsersAndJogs(accessToken: String, passedUser: User) {
+        if user != nil {
+            DispatchQueue.main.async { [weak self] in
+                self?.startActivityIndicator()
+            }
+        }
         NetworkManager.syncUsersAndJogs(accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
             switch result {
             case .success(let response):
-                    self?.jogs = response.jogs.filter { $0.userId == passedUser.id }
+                    self.jogs = response.jogs.filter { $0.userId == passedUser.id }
                     DispatchQueue.main.async {
-                        self?.spinner.stopAnimating()
-                        self?.jogsTableView.reloadData()
+                        self.stopActivityIndicator()
                         print("Sync jogs and user success")
                     }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.showErrorAlert(error: error)
+                    self.spinner.stopAnimating()
+                    self.showErrorAlert(error: error)
                 }
             }
             
@@ -156,21 +183,68 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func deleteJog(passedJog: Jog, accessToken: String) {
         NetworkManager.deleteJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
-                    self?.spinner.stopAnimating()
-                    self?.jogsTableView.isUserInteractionEnabled = true
-                    self?.jogsTableView.alpha = 1.0
-                    self?.addJogButton.isEnabled = true
-                    self?.jogsTableView.reloadData()
+                    self.stopActivityIndicator()
                     print("\(response)")
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.spinner.stopAnimating()
-                    self?.showErrorAlert(error: error)
+                    self.spinner.stopAnimating()
+                    self.showErrorAlert(error: error)
 
+                }
+            }
+            
+        }
+    }
+    
+    private func updateJog(passedJog: Jog, accessToken: String) {
+        NetworkManager.updateJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    if let user = self.user {
+                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                    }
+                }
+                print("\(response)")
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showErrorAlert(error: error)
+                }
+            }
+        }
+    }
+    
+    private func addJog(passedJog: Jog, accessToken: String) {
+        NetworkManager.addJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    if let user = self.user {
+                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                    }
+                }
+                print("\(response)")
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showErrorAlert(error: error)
                 }
             }
             
@@ -179,18 +253,40 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    @IBAction func unwindToJogsVC(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? EditJogViewController, let jog = sourceViewController.jog, let accessToken = accessToken {
+            startActivityIndicator()
+            if let indexPath = sourceViewController.indexPathForEditMode {
+                jogs?[indexPath.row] = jog
+                jogsTableView.reloadRows(at: [indexPath], with: .none)
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    self?.updateJog(passedJog: jog, accessToken: accessToken)
+                }
+            } else if let count = jogs?.count {
+                let newIndexPath = IndexPath(row: count, section: 0)
+                jogs?.append(jog)
+                jogsTableView.insertRows(at: [newIndexPath], with: .automatic)
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    self?.addJog(passedJog: jog, accessToken: accessToken)
+                }
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         switch segue.identifier {
         case "Add Jog":
-            if let _ = segue.destination.contents as? EditJogViewController {
-                print("Add Jog Happening")
+            if let editJogVC = segue.destination.contents as? EditJogViewController {
+                editJogVC.title = "Add a Jog"
+                print("Add Jog Called")
             }
         case "Edit Jog":
             if let editJogVC = segue.destination.contents as? EditJogViewController, let selectedJogCell = sender as? JogTableViewCell, let indexPath = jogsTableView.indexPath(for: selectedJogCell) {
+                editJogVC.indexPathForEditMode = indexPath
                 let selectedJog = jogs?[indexPath.row]
                 editJogVC.jog = selectedJog
+                editJogVC.title = "Jog #\(selectedJog?.id ?? 0)"
             }
         default:
             showErrorAlert(error: JogsVCError.unknownSegue)
@@ -224,5 +320,17 @@ extension JogsViewController.JogsVCError: LocalizedError {
         case .unknownSegue:
             return NSLocalizedString("Unexpected Segue Identifier.\nPlease report to the developer", comment: "Showing Jog Failed")
         }
+    }
+}
+
+extension UIViewController {
+    func hideKeyboardOnTouchUpInside() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
 }

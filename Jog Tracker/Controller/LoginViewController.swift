@@ -28,6 +28,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         uuidTextField.delegate = self
+        self.hideKeyboardOnTouchUpInside()
     }
     
     override func viewWillAppear(_ animated: Bool) {
