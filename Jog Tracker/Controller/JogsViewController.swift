@@ -15,7 +15,9 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
-    
+    fileprivate enum JogsVCError: Error {
+        case unknownSegue
+    }
     private var user: User?
     private var jogs: [Jog]?
     @IBOutlet weak var spinner: UIActivityIndicatorView!
@@ -127,17 +129,26 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
         }
     }
-    
-    
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)
+        switch segue.identifier {
+        case "Add Jog":
+            if let _ = segue.destination.contents as? EditJogViewController {
+                print("Add Jog Happening")
+            }
+        case "Edit Jog":
+            if let editJogVC = segue.destination.contents as? EditJogViewController, let selectedJogCell = sender as? JogTableViewCell, let indexPath = jogsTableView.indexPath(for: selectedJogCell) {
+                let selectedJog = jogs?[indexPath.row]
+                editJogVC.jog = selectedJog
+            }
+        default:
+            showErrorAlert(error: JogsVCError.unknownSegue)
+        }
     }
-    */
 
 }
 
@@ -157,5 +168,14 @@ extension Date {
         dateFormatter.dateFormat = "MMM d, yyyy"
         let dateInString = dateFormatter.string(from: self)
         return dateInString
+    }
+}
+
+extension JogsViewController.JogsVCError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .unknownSegue:
+            return NSLocalizedString("Unexpected Segue Identifier.\nPlease report to the developer", comment: "Showing Jog Failed")
+        }
     }
 }
