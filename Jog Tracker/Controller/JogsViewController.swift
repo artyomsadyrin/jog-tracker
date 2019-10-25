@@ -52,18 +52,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         ))
         present(alert, animated: true)
     }
-    
-    private func performDateFormattingToString(date: Date?) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
-        if let date = date {
-            let dateInString = dateFormatter.string(from: date)
-            return dateInString
-        } else {
-            print("Can't get a date")
-            return nil
-        }
-    }
 
     // MARK: Table View Data Source
     
@@ -85,7 +73,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let jog = jogs[indexPath.row]
         
-        guard let identifier = jog.id, let distance = jog.distance, let time = jog.time, let date = performDateFormattingToString(date: jog.date) else {
+        guard let identifier = jog.id, let distance = jog.distance, let time = jog.time, let date = jog.date?.performDateFormattingToString() else {
             return cell
         }
         
@@ -160,5 +148,14 @@ extension UIViewController {
         } else {
             return self
         }
+    }
+}
+
+extension Date {
+    func performDateFormattingToString() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        let dateInString = dateFormatter.string(from: self)
+        return dateInString
     }
 }
