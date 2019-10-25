@@ -13,23 +13,12 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // MARK: Properties
     
-    private struct Jog {
-        var distance: Double
-        var time: Int
-        var date: String
-        
-    }
-    
     var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
     
-    private var jogs: [Jog] = [
-        Jog(distance: 2.2, time: 10, date: "July 10"),
-        Jog(distance: 3.9, time: 20, date: "August 1"),
-        Jog(distance: 4.4, time: 32, date: "September 9"),
-        Jog(distance: 1.3, time: 2, date: "September 30"),
-        Jog(distance: 10.2, time: 90, date: "October 31")
-    ]
+    private var user: User?
+    private var jogs = [Jog]()
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     // MARK: General Methods
 
@@ -38,13 +27,30 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.modalPresentationStyle = .fullScreen
         jogsTableView.delegate = self
         jogsTableView.dataSource = self
-        print("JogsVC: Access Token\n\(accessToken ?? "wrong token")")
+        if let accessToken = accessToken {
+            getUser(accessToken: accessToken)
+        }
     }
     
     // MARK: Action Methods
     
     @IBAction func backBarButtonItemPressed(_ sender: UIBarButtonItem) {
         presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: Private Methods
+    
+    private func showErrorAlert(error: Error) {
+        let alert = UIAlertController(
+            title: "Showing Jogs Failed",
+            message: "\(error.localizedDescription)",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: "OK",
+            style: .default
+        ))
+        present(alert, animated: true)
     }
 
     // MARK: Table View Data Source
@@ -67,6 +73,26 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.dateLabel.text = "Date: \(jog.date)"
         
         return cell
+    }
+    
+    // MARK: Network Methods
+    
+    private func getUser(accessToken: String) {
+        spinner.isHidden = false
+        spinner.startAnimating()
+        NetworkManager.getUser(accessToken: accessToken) { [weak self] result in
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.user = user
+                    print("JogsVC. Get User Success. User: \(user.firstName ?? "wrong first name")")
+                }
+            case .failure(let error):
+                self?.spinner.stopAnimating()
+                self?.showErrorAlert(error: error)
+            }
+        }
     }
     
     

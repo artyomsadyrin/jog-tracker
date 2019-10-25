@@ -26,8 +26,12 @@ class NetworkManager
         let parameter = "uuid=\(uuid)"
         
         guard let uuidData = parameter.data(using: .utf8) else {
-            completionHandler(.failure(NetworkError.failedEncodeToJSON))
+            completionHandler(.failure(NetworkError.failedEncodeToData))
             return
+        }
+        
+        if let uuidDataString = String(data: uuidData, encoding: .utf8) {
+            print("UUID Login:\n\(uuidDataString)")
         }
         
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
@@ -47,27 +51,29 @@ class NetworkManager
             }
             
             if let response = response as? HTTPURLResponse {
-                if response.statusCode == 500 {
+                switch response.statusCode {
+                case 400:
+                    completionHandler(.failure(NetworkError.clientError))
+                case 500:
                     completionHandler(.failure(NetworkError.internalServerError))
+                default:
+                    break
                 }
             }
             
             if let data = data {
                 if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("JSON Result\n\(String(describing: dataString))")
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let codingData = try? decoder.decode(AuthResponse.CodingData.self, from: data)
-                    if let codingData = codingData {
-                        completionHandler(.success(codingData.authResponse))
-                    } else {
-                        completionHandler(.failure(NetworkError.failedDecodeFromJSON))
-                    }
+                    print("UUID Login JSON Result:\n\(String(describing: dataString))")
+                }
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let codingData = try? decoder.decode(AuthResponse.CodingData.self, from: data)
+                if let codingData = codingData {
+                    completionHandler(.success(codingData.authResponse))
                 } else {
-                    completionHandler(.failure(NetworkError.failedDecodeFromDataToString))
+                    completionHandler(.failure(NetworkError.failedDecodeFromJSON))
                 }
             }
-            
         }
         
         datatask.resume()
@@ -75,9 +81,57 @@ class NetworkManager
     
     // MARK: GET /v1/auth/user
     
-    static func getUser(completionHandler: @escaping (Result<User, Error>) -> () )
+    static func getUser(accessToken: String, completionHandler: @escaping (Result<User, Error>) -> () )
     {
+        let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/auth/user")
         
+        guard let url = requestURL else {
+            completionHandler(.failure(NetworkError.wrongURL))
+            return
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        
+        let datatask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+            
+            if let error = error {
+                DispatchQueue.main.async {
+                    completionHandler(.failure(error))
+                }
+            }
+            
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 400:
+                    completionHandler(.failure(NetworkError.clientError))
+                case 500:
+                    completionHandler(.failure(NetworkError.internalServerError))
+                default:
+                    break
+                }
+            }
+            
+            if let data = data {
+                if let dataString = String(data: data, encoding: String.Encoding.utf8) {
+                    print("Get User JSON Result:\n\(String(describing: dataString))")
+                }
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let codingData = try? decoder.decode(User.CodingData.self, from: data)
+                if let codingData = codingData {
+                    completionHandler(.success(codingData.user))
+                } else {
+                    completionHandler(.failure(NetworkError.failedDecodeFromJSON))
+                }
+            }
+        }
+        
+        datatask.resume()
         
     }
     
@@ -86,8 +140,8 @@ class NetworkManager
 
 
 enum NetworkError: Error {
-    case failedEncodeToJSON
-    case failedDecodeFromDataToString
+    case clientError
+    case failedEncodeToData
     case wrongURL
     case internalServerError
     case failedDecodeFromJSON
@@ -100,12 +154,12 @@ extension NetworkError: LocalizedError {
             return NSLocalizedString("Failed to perform network request.\nPlease enter another UUID.", comment: "Internal Server Error")
         case .wrongURL:
             return NSLocalizedString("App have wrong URL.\nPlease report to the developer.", comment: "Wrong URL")
-        case .failedDecodeFromDataToString:
-            return NSLocalizedString("App can't read data from the network.\nPlease report to the developer.", comment: "Failed to decode network answer")
         case .failedDecodeFromJSON:
             return NSLocalizedString("App failed to decode data from the network from JSON.\nPlease report to the developer.", comment: "Failed to decode network answer")
-        case .failedEncodeToJSON:
-            return NSLocalizedString("App failed to encode parameter to JSON.\nPlease report to the developer", comment: "JSON Encoding Failed")
+        case .failedEncodeToData:
+            return NSLocalizedString("App failed to encode parameter to the data.\nPlease report to the developer", comment: "JSON Encoding Failed")
+        case .clientError:
+            return NSLocalizedString("The request cannot be fulfilled due to bad syntax.\nPlease report to the developer", comment: "Client Side Error")
         }
     }
 }

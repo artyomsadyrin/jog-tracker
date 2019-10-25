@@ -131,13 +131,19 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="4Wp-UT-rtg">
+                                <rect key="frame" x="188.5" y="402.5" width="37" height="37"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="Z4H-wi-aHk" firstAttribute="bottom" secondItem="GT5-3n-0r5" secondAttribute="bottom" id="3hx-X5-s70"/>
+                            <constraint firstItem="4Wp-UT-rtg" firstAttribute="centerX" secondItem="wk3-8R-w6j" secondAttribute="centerX" id="7mv-aT-edv"/>
                             <constraint firstItem="Z4H-wi-aHk" firstAttribute="trailing" secondItem="GT5-3n-0r5" secondAttribute="trailing" id="HMe-Cv-Eay"/>
                             <constraint firstItem="GT5-3n-0r5" firstAttribute="leading" secondItem="Z4H-wi-aHk" secondAttribute="leading" id="IIt-zm-0Wi"/>
                             <constraint firstItem="GT5-3n-0r5" firstAttribute="top" secondItem="Z4H-wi-aHk" secondAttribute="top" id="b4i-JC-uhX"/>
+                            <constraint firstItem="4Wp-UT-rtg" firstAttribute="centerY" secondItem="wk3-8R-w6j" secondAttribute="centerY" id="qEd-V2-eTb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Z4H-wi-aHk"/>
                     </view>
@@ -155,6 +161,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="jogsTableView" destination="GT5-3n-0r5" id="1ru-4g-o1C"/>
+                        <outlet property="spinner" destination="4Wp-UT-rtg" id="RsE-MQ-ICf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rHi-VK-Kn4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

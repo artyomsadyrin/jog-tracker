@@ -14,7 +14,6 @@ struct AuthResponse: Codable {
     let expiresIn: Int?
     let scope: String?
     let createdAt: Int?
-    var user: User?
 }
 
 extension AuthResponse {
@@ -25,7 +24,6 @@ extension AuthResponse {
             let expiresIn: Int?
             let scope: String?
             let createdAt: Int?
-            var user: User?
         }
         let response: ResponseContainer
         let timestamp: Int

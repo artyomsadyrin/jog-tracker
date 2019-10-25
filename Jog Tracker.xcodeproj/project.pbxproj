@@ -18,6 +18,8 @@
 		8E7141A823609698005968AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E7141A723609698005968AA /* Assets.xcassets */; };
 		8E7141AB23609698005968AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7141A923609698005968AA /* LaunchScreen.storyboard */; };
 		8E7D58AB2361964600852316 /* JogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7D58AA2361964600852316 /* JogsViewController.swift */; };
+		8EF34CC22362D69200ED3982 /* Jog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF34CC12362D69200ED3982 /* Jog.swift */; };
+		8EF34CC42362D98500ED3982 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF34CC32362D98500ED3982 /* Response.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		8E7141AA23609698005968AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E7141AC23609698005968AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E7D58AA2361964600852316 /* JogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JogsViewController.swift; sourceTree = "<group>"; };
+		8EF34CC12362D69200ED3982 /* Jog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jog.swift; sourceTree = "<group>"; };
+		8EF34CC32362D98500ED3982 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +56,7 @@
 			children = (
 				8E3E6BE62361C2D30001D915 /* NetworkManager.swift */,
 				8E3E6BE82361C9B70001D915 /* AuthResponse.swift */,
+				8EF34CC32362D98500ED3982 /* Response.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -60,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				8E3E6BEB2361CA750001D915 /* User.swift */,
+				8EF34CC12362D69200ED3982 /* Jog.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -197,6 +203,8 @@
 				8E7141A323609686005968AA /* LoginViewController.swift in Sources */,
 				8E71419F23609686005968AA /* AppDelegate.swift in Sources */,
 				8E7D58AB2361964600852316 /* JogsViewController.swift in Sources */,
+				8EF34CC42362D98500ED3982 /* Response.swift in Sources */,
+				8EF34CC22362D69200ED3982 /* Jog.swift in Sources */,
 				8E3E6BEC2361CA750001D915 /* User.swift in Sources */,
 				8E3E6BE92361C9B70001D915 /* AuthResponse.swift in Sources */,
 				8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */,

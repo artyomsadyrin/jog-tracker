@@ -15,6 +15,31 @@ struct User: Codable {
     var role: String?
     var firstName: String?
     var lastName: String?
-    
-    
+}
+
+extension User {
+    struct CodingData: Codable {
+        struct ResponseContainer: Codable {
+            let id: String?
+            var email: String?
+            var phone: String?
+            var role: String?
+            var firstName: String?
+            var lastName: String?
+        }
+        let response: ResponseContainer
+    }
+}
+
+extension User.CodingData {
+    var user: User {
+        return User(
+            id: response.id,
+            email: response.email,
+            phone: response.phone,
+            role: response.role,
+            firstName: response.firstName,
+            lastName: response.lastName
+        )
+    }
 }
