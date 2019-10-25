@@ -18,6 +18,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     fileprivate enum JogsVCError: Error {
         case unknownSegue
     }
+    private let jogsRefreshControl = UIRefreshControl()
+    @IBOutlet weak var addJogButton: UIBarButtonItem!
     private var user: User?
     private var jogs: [Jog]?
     @IBOutlet weak var spinner: UIActivityIndicatorView!
@@ -32,6 +34,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if let accessToken = accessToken {
             getUser(accessToken: accessToken)
         }
+        jogsTableView.refreshControl = jogsRefreshControl
+        jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView), for: .valueChanged)
     }
     
     // MARK: Action Methods
@@ -53,6 +57,12 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             style: .default
         ))
         present(alert, animated: true)
+    }
+    
+    @objc private func refreshJogsTableView() {
+        if let accessToken = accessToken, let user = user {
+            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+        }
     }
 
     // MARK: Table View Data Source
@@ -85,6 +95,20 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.dateLabel.text = "Date: \(date)"
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let deletedJog = jogs?[indexPath.row], let accessToken = accessToken {
+                jogs?.remove(at: indexPath.row)
+                jogsTableView.isUserInteractionEnabled = false
+                jogsTableView.alpha = 0.5
+                addJogButton.isEnabled = false
+                spinner.isHidden = false
+                spinner.startAnimating()
+                deleteJog(passedJog: deletedJog, accessToken: accessToken)
+            }
+        }
     }
     
     // MARK: Network Methods
@@ -124,6 +148,29 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             case .failure(let error):
                 DispatchQueue.main.async {
                     self?.showErrorAlert(error: error)
+                }
+            }
+            
+        }
+    }
+    
+    private func deleteJog(passedJog: Jog, accessToken: String) {
+        NetworkManager.deleteJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.jogsTableView.isUserInteractionEnabled = true
+                    self?.jogsTableView.alpha = 1.0
+                    self?.addJogButton.isEnabled = true
+                    self?.jogsTableView.reloadData()
+                    print("\(response)")
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.showErrorAlert(error: error)
+
                 }
             }
             

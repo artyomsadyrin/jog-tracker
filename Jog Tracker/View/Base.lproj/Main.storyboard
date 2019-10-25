@@ -80,20 +80,20 @@
                             <mask key="constraints">
                                 <exclude reference="09P-u4-5uY"/>
                                 <exclude reference="jVp-p6-qYR"/>
-                                <exclude reference="kwD-4F-sLn"/>
                                 <exclude reference="gw9-m8-66u"/>
                                 <exclude reference="knb-mF-382"/>
+                                <exclude reference="kwD-4F-sLn"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="09P-u4-5uY"/>
-                                <exclude reference="4bw-ce-N2Y"/>
-                                <exclude reference="9Xt-ua-A2o"/>
-                                <include reference="kwD-4F-sLn"/>
                                 <exclude reference="aVd-tp-rgO"/>
                                 <include reference="gw9-m8-66u"/>
                                 <exclude reference="ynd-aE-dXx"/>
+                                <exclude reference="4bw-ce-N2Y"/>
+                                <exclude reference="9Xt-ua-A2o"/>
+                                <include reference="kwD-4F-sLn"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -122,7 +122,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GT5-3n-0r5">
-                                <rect key="frame" x="0.0" y="108" width="414" height="734"/>
+                                <rect key="frame" x="0.0" y="56" width="414" height="752"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="JogTableViewCell" id="dNh-Mt-uiA" customClass="JogTableViewCell" customModule="Jog_Tracker" customModuleProvider="target">
@@ -208,6 +208,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addJogButton" destination="q00-ZY-xdE" id="C9e-FK-TJf"/>
                         <outlet property="jogsTableView" destination="GT5-3n-0r5" id="1ru-4g-o1C"/>
                         <outlet property="spinner" destination="4Wp-UT-rtg" id="RsE-MQ-ICf"/>
                     </connections>
