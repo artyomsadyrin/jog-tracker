@@ -47,7 +47,7 @@ extension Response.CodingData {
                     userId: $0.userId,
                     distance: $0.distance,
                     time: $0.time,
-                    date: $0.date
+                    date: Date.init(timeIntervalSince1970: TimeInterval($0.date ?? 0))
                 )},
             users: response.users.map {
                 User(
