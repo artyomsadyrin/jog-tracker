@@ -168,7 +168,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+                    self.stopActivityIndicator()
                     self.showErrorAlert(error: error)
                 }
             }
@@ -195,7 +195,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+                    self.stopActivityIndicator()
                     self.showErrorAlert(error: error)
                 }
             }
@@ -219,7 +219,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+                    self.stopActivityIndicator()
                     self.showErrorAlert(error: error)
 
                 }
@@ -244,7 +244,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+                    self.stopActivityIndicator()
                     self.showErrorAlert(error: error)
                 }
             }
@@ -267,7 +267,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+                    self.stopActivityIndicator()
                     self.showErrorAlert(error: error)
                 }
             }
@@ -280,16 +280,11 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func unwindToJogsVC(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? EditJogViewController, let jog = sourceViewController.jog, let accessToken = accessToken {
             startActivityIndicator()
-            if let indexPath = sourceViewController.indexPathForEditMode {
-                jogs?[indexPath.row] = jog
-                jogsTableView.reloadRows(at: [indexPath], with: .none)
+            if let _ = sourceViewController.indexPathForEditMode {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     self?.updateJog(passedJog: jog, accessToken: accessToken)
                 }
-            } else if let count = jogs?.count {
-                let newIndexPath = IndexPath(row: count, section: 0)
-                jogs?.append(jog)
-                jogsTableView.insertRows(at: [newIndexPath], with: .automatic)
+            } else {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     self?.addJog(passedJog: jog, accessToken: accessToken)
                 }
