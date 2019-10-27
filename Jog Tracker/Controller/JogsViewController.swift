@@ -258,14 +258,13 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(let response):
+            case .success(_):
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Add jog success")
                     if let user = self.user {
                         self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
                     }
                 }
-                print("\(response)")
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.spinner.stopAnimating()

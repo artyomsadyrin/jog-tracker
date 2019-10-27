@@ -126,8 +126,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
 
 }
 
-extension UIButton
-{
+extension UIButton {
     @IBInspectable var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
@@ -168,3 +167,12 @@ extension LoginViewController.LoginError: LocalizedError {
     }
 }
 
+extension UITextField {
+    var isEmpty: Bool {
+        if let text = self.text, text.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+}

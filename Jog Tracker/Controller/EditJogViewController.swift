@@ -123,8 +123,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         } else {
             textField.layer.borderWidth = 0.5
             textField.layer.borderColor = UIColor.red.cgColor
-            isTextFieldValid = true
-            
+            isTextFieldValid = false
         }
     }
     
@@ -161,6 +160,23 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     }
 
     // MARK: - Navigation
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
+        
+        switch identifier {
+        case "Save Jog":
+            if !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty && isTextFieldValid {
+                return true
+            } else {
+                checkTimeTextField(timeTextField)
+                checkDistanceTextField(distanceTextField)
+                return false
+            }
+        default:
+            return true
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
