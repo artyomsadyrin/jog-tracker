@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
@@ -18,11 +19,20 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     fileprivate enum JogsVCError: Error {
         case unknownSegue
     }
+    private var isDeletionHappening = false
     private let jogsRefreshControl = UIRefreshControl()
     @IBOutlet weak var addJogButton: UIBarButtonItem!
     private var user: User?
     private var jogs: [Jog]?
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView! {
+        didSet {
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                spinner.style = .medium
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                spinner.style = .large
+            }
+        }
+    }
     
     // MARK: General Methods
 
@@ -36,6 +46,15 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         jogsTableView.refreshControl = jogsRefreshControl
         jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView(_:)), for: .valueChanged)
+    }
+    
+    deinit {
+        os_log(.debug, log: OSLog.default, "JogsViewController deinited")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isDeletionHappening = false
     }
     
     // MARK: Action Methods
@@ -119,7 +138,10 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if let deletedJog = jogs?[indexPath.row], let accessToken = accessToken {
                 jogs?.remove(at: indexPath.row)
                 startActivityIndicator()
-                deleteJog(passedJog: deletedJog, accessToken: accessToken)
+                isDeletionHappening = true
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    self?.deleteJog(passedJog: deletedJog, accessToken: accessToken)
+                }
             }
         }
     }
@@ -139,7 +161,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             case .success(let user):
                 DispatchQueue.main.async {
                     self.user = user
-                    print("Get User Success. User: \(user.firstName ?? "wrong first name")")
+                    os_log(.debug, log: OSLog.default, "Get user success")
                     DispatchQueue.global(qos: .userInitiated).async {
                         self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
                     }
@@ -154,7 +176,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     private func syncUsersAndJogs(accessToken: String, passedUser: User) {
-        if user != nil {
+        if user != nil || !isDeletionHappening {
             DispatchQueue.main.async { [weak self] in
                 self?.startActivityIndicator()
             }
@@ -169,7 +191,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
-                        print("Sync jogs and user success")
+                        os_log(.debug, log: OSLog.default, "Sync users and jogs success")
                     }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -188,10 +210,12 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(let response):
+            case .success(_):
                 DispatchQueue.main.async {
-                    self.stopActivityIndicator()
-                    print("\(response)")
+                    os_log(.debug, log: OSLog.default, "Delete jog success")
+                    if let user = self.user {
+                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                    }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -211,13 +235,13 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(let response):
+            case .success(_):
                 DispatchQueue.main.async {
+                    os_log(.debug, log: OSLog.default, "Update user success")
                     if let user = self.user {
                         self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
                     }
                 }
-                print("\(response)")
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.spinner.stopAnimating()
@@ -236,6 +260,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
+                    os_log(.debug, log: OSLog.default, "Add jog success")
                     if let user = self.user {
                         self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
                     }
@@ -279,7 +304,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         case "Add Jog":
             if let editJogVC = segue.destination.contents as? EditJogViewController {
                 editJogVC.title = "Add a Jog"
-                print("Add Jog Called")
             }
         case "Edit Jog":
             if let editJogVC = segue.destination.contents as? EditJogViewController, let selectedJogCell = sender as? JogTableViewCell, let indexPath = jogsTableView.indexPath(for: selectedJogCell) {

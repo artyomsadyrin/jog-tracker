@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class EditJogViewController: UITableViewController, UITextFieldDelegate {
     
@@ -19,6 +20,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var timeTextField: UITextField!
     
     @IBOutlet weak var distanceTextField: UITextField!
+    private var isTextFieldValid = false
     private var pickedDate: Date?
     private var datePicker: UIDatePicker? {
         didSet { datePicker?.minimumDate = Date(timeIntervalSince1970: 0) }
@@ -45,7 +47,13 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         dateTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         timeTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         distanceTextField.inputAccessoryView = addOnlyToolbarDoneButton()
+        timeTextField.addTarget(self, action: #selector(checkTimeTextField(_:)), for: UIControl.Event.editingChanged)
+        distanceTextField.addTarget(self, action: #selector(checkDistanceTextField(_:)), for: UIControl.Event.editingChanged)
         self.hideKeyboardOnTouchUpInside()
+    }
+    
+    deinit {
+        os_log(.debug, log: OSLog.default, "EditJogViewController deinited")
     }
     
     // MARK: Action Methods
@@ -95,6 +103,31 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    @objc private func checkTimeTextField(_ textField: UITextField) {
+        if let text = textField.text, let _ = Int(text) {
+            textField.layer.borderWidth = 0.0
+            textField.layer.borderColor = .none
+            isTextFieldValid = true
+        } else {
+            textField.layer.borderWidth = 0.5
+            textField.layer.borderColor = UIColor.red.cgColor
+            isTextFieldValid = false
+        }
+    }
+    
+    @objc private func checkDistanceTextField(_ textField: UITextField) {
+        if let text = textField.text, let _ = Double(text) {
+            textField.layer.borderWidth = 0.0
+            textField.layer.borderColor = .none
+            isTextFieldValid = true
+        } else {
+            textField.layer.borderWidth = 0.5
+            textField.layer.borderColor = UIColor.red.cgColor
+            isTextFieldValid = true
+            
+        }
+    }
+    
     // MARK: Date Picker Methods
     
     private func setUpDatePicker() {
@@ -128,8 +161,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     }
 
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         

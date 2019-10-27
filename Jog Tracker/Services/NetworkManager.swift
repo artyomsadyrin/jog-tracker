@@ -30,10 +30,6 @@ class NetworkManager
             return
         }
         
-        if let uuidDataString = String(data: uuidData, encoding: .utf8) {
-            print("UUID Login:\n\(uuidDataString)")
-        }
-        
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -62,9 +58,6 @@ class NetworkManager
             }
             
             if let data = data {
-                if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("UUID Login. JSON Result:\n\(String(describing: dataString))")
-                }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let codingData = try? decoder.decode(AuthResponse.CodingData.self, from: data)
@@ -117,9 +110,6 @@ class NetworkManager
             }
             
             if let data = data {
-                if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("Get User. JSON Result:\n\(String(describing: dataString))")
-                }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let codingData = try? decoder.decode(User.CodingData.self, from: data)
@@ -172,9 +162,6 @@ class NetworkManager
             }
             
             if let data = data {
-                if let dataString = String(data: data, encoding: String.Encoding.utf8) {
-                    print("Sync Users And Jogs. JSON Result:\n\(String(describing: dataString))")
-                }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let codingData = try? decoder.decode(Response.CodingData.self, from: data)

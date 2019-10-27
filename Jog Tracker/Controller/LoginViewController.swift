@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class LoginViewController: UIViewController, UITextFieldDelegate
 {
@@ -20,7 +21,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         case emptyField
         case unknownSegue
     }
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView! {
+        didSet {
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                spinner.style = .medium
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                spinner.style = .large
+            }
+        }
+    }
     
     
     // MARK: General Methods
@@ -73,6 +82,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
                     self?.spinner.stopAnimating()
                     self?.isLoginSuccess = true
                     self?.authResponse = authResponse
+                    os_log(.debug, log: OSLog.default, "Login success")
                     self?.performSegue(withIdentifier: "Show Jogs", sender: nil)
                 }
             case .failure(let error):
@@ -114,6 +124,37 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         }
     }
 
+}
+
+extension UIButton
+{
+    @IBInspectable var cornerRadius: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
+        set {
+            layer.cornerRadius = newValue
+            layer.masksToBounds = newValue > 0
+        }
+    }
+    
+    @IBInspectable var borderWidth: CGFloat {
+        get {
+            return layer.borderWidth
+        }
+        set {
+            layer.borderWidth = newValue
+        }
+    }
+    
+    @IBInspectable var borderColor: UIColor? {
+        get {
+            return UIColor(cgColor: layer.borderColor!)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
+        }
+    }
 }
 
 extension LoginViewController.LoginError: LocalizedError {
