@@ -119,6 +119,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate
             if let tabBarVC = segue.destination as? UITabBarController, let jogsVC = tabBarVC.viewControllers?[0].contents as? JogsViewController {
                 jogsVC.accessToken = authResponse?.accessToken
             }
+            if let tabBarVC = segue.destination as? UITabBarController, let feedbackTVC = tabBarVC.viewControllers?[1].contents as? FeedbackTableViewController {
+                feedbackTVC.accessToken = authResponse?.accessToken
+                os_log(.error, log: OSLog.default, "Successfully passed access token to feedbackTVC")
+            } else {
+                os_log(.error, log: OSLog.default, "Can't get feedbackTVC")
+            }
         default:
             showErrorAlert(error: LoginError.unknownSegue)
         }

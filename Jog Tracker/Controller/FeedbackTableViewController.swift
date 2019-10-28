@@ -27,6 +27,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.clearsSelectionOnViewWillAppear = false
         feedbackTextView.delegate = self
         addPlacehoderToTextView(feedbackTextView)
@@ -34,6 +35,36 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
         setUpTopicIdPickerView()
         topicIdTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         os_log(.debug, log: OSLog.default, "FeedbackVC loaded")
+    }
+    
+    // MARK: Private Methods
+    
+    private func showSavingAlert(result: Result<String,Error>) {
+        var message = String()
+        
+        switch result {
+        case .success(let response):
+            message = response
+        case .failure(let error):
+            message = "\(error.localizedDescription)"
+        }
+        
+        let alert = UIAlertController(
+            title: "Feedback Saving",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: "OK",
+            style: .default
+        ))
+        present(alert, animated: true)
+    }
+    
+    private func setViewToDefaultState() {
+        feedback = nil
+        setDefaultValueForTopicIdPickerView()
+        addPlacehoderToTextView(feedbackTextView)
     }
     
     // MARK: TextField Methods
@@ -111,6 +142,10 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
         topicIdTextField.inputView = topicIdPickerView
         
         topicIdPickerView.selectRow(0, inComponent: 0, animated: false)
+        setDefaultValueForTopicIdPickerView()
+    }
+    
+    private func setDefaultValueForTopicIdPickerView() {
         if let topicId = topicIdPickerData.first {
             pickedTopicId = topicId
             topicIdTextField.text = topicId.rawValue.description
@@ -164,16 +199,42 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
             return
         }
         
-        guard let topicId = pickedTopicId else {
-            os_log(.error, log: OSLog.default, "Can't get topic id")
+        guard let topicId = pickedTopicId, let accessToken = accessToken else {
+            os_log(.error, log: OSLog.default, "Can't get topic id or access token")
             return
         }
         
         checkFeedbackTextView(feedbackTextView)
-        
         feedback = Feedback(topicId: topicId.rawValue, text: feedbackTextView.text.trimmingCharacters(in: .whitespacesAndNewlines))
-        print("Feedback. ID: \(topicId.rawValue), text: \(feedbackTextView.text ?? "wrong text")")
         
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let feedback = self?.feedback else {
+                return
+            }
+            self?.sendFeedback(passedFeedback: feedback, accessToken: accessToken)
+        }
+    }
+    
+    // MARK: Network Methods
+    
+    private func sendFeedback(passedFeedback: Feedback, accessToken: String) {
+        NetworkManager.sendFeedback(feedback: passedFeedback, accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self.setViewToDefaultState()
+                    self.showSavingAlert(result: result)
+                }
+            case .failure(_):
+                DispatchQueue.main.async {
+                    self.showSavingAlert(result: result)
+                }
+            }
+        }
     }
     
     

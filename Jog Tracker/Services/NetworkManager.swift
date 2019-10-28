@@ -333,6 +333,62 @@ class NetworkManager
         datatask.resume()
     }
     
+    static func sendFeedback(feedback: Feedback, accessToken: String, completionHandler: @escaping (Result<String, Error>) -> () )
+    {
+        let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/feedback/send")
+        
+        guard let url = requestURL else {
+            completionHandler(.failure(NetworkError.wrongURL))
+            return
+        }
+        
+        guard let text = feedback.text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            completionHandler(.failure(NetworkError.parameterMissing))
+            return
+        }
+        
+        let parameter = "topic_id=\(feedback.topicId)&text=\(text))"
+        
+        guard let sendFeedbackData = parameter.data(using: .utf8) else {
+            completionHandler(.failure(NetworkError.failedEncodeToData))
+            return
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = sendFeedbackData
+        
+        let session = URLSession.shared
+        
+        let datatask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+            
+            if let error = error {
+                DispatchQueue.main.async {
+                    completionHandler(.failure(error))
+                }
+            }
+            
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 200...299:
+                    completionHandler(.success("Feedback did sent successfully"))
+                case 400...499:
+                    completionHandler(.failure(NetworkError.clientError))
+                case 500...599:
+                    completionHandler(.failure(NetworkError.internalServerError))
+                default:
+                    completionHandler(.failure(NetworkError.unknownError))
+                }
+            }
+            
+        }
+        
+        datatask.resume()
+    }
+    
     
 }
 
@@ -357,9 +413,9 @@ extension NetworkError: LocalizedError {
         case .failedDecodeFromJSON:
             return NSLocalizedString("App failed to decode data from the network from JSON.\nPlease report to the developer.", comment: "Failed to decode network answer")
         case .failedEncodeToData:
-            return NSLocalizedString("App failed to encode parameter to the data.\nPlease report to the developer", comment: "JSON Encoding Failed")
+            return NSLocalizedString("App failed to encode parameter to the data.\nPlease report to the developer.", comment: "JSON Encoding Failed")
         case .clientError:
-            return NSLocalizedString("The request cannot be fulfilled due to bad syntax.\nPlease report to the developer", comment: "Client Side Error")
+            return NSLocalizedString("The request cannot be fulfilled due to bad syntax.\nPlease report to the developer.", comment: "Client Side Error")
         case .parameterMissing:
             return NSLocalizedString("One of the parameter missing when attemp to send a request happening.\nPlease try to add a jog again", comment: "Client Side Error")
         case .unknownError:
