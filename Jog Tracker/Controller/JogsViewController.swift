@@ -102,6 +102,25 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         spinner.stopAnimating()
         jogsTableView.reloadData()
     }
+    
+    private func filterJogs(_ response: Response) {
+        let calendar = Calendar.current
+        let dates = response.jogs.map { (jog) -> Date in
+            if let date = jog.date {
+                return date
+            } else {
+                return Date(timeIntervalSince1970: 0.0)
+            }
+        }
+        let minDate = dates.min { $0 < $1 }
+        let maxDate = dates.max()
+        if let minDate = minDate, let maxDate = maxDate {
+            print("Minimum date: \(minDate.performDateFormattingToString()!), Maximum date: \(maxDate.performDateFormattingToString()!)")
+            let countOfWeeks = calendar.dateComponents([.weekOfYear], from: minDate, to: maxDate)
+            print("Count of weeks between min and max date: \(countOfWeeks.debugDescription)")
+        }
+        
+    }
 
     // MARK: Table View Data Source
     
@@ -191,6 +210,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let response):
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
+                    self.filterJogs(response)
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
                         os_log(.debug, log: OSLog.default, "Sync users and jogs success")
@@ -352,5 +372,11 @@ extension UIViewController {
     @objc func dismissKeyboard()
     {
         view.endEditing(true)
+    }
+}
+
+extension Date {
+    var week: Int {
+        return Calendar.current.component(.weekOfYear, from: self)
     }
 }

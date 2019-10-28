@@ -228,6 +228,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
                 DispatchQueue.main.async {
                     self.setViewToDefaultState()
                     self.showSavingAlert(result: result)
+                    os_log(.debug, log: OSLog.default, "Send feedback success")
                 }
             case .failure(_):
                 DispatchQueue.main.async {
