@@ -89,27 +89,31 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    private func showTextFieldError(_ textField: UITextField) {
+        textField.layer.borderWidth = 0.5
+        textField.layer.borderColor = UIColor.red.cgColor
+        isAllTextFieldsValid = false
+    }
+    
+    private func hideTextFieldError(_ textField: UITextField) {
+        textField.layer.borderWidth = 0.0
+        textField.layer.borderColor = .none
+        isAllTextFieldsValid = true
+    }
+    
     @objc private func showTimeTextFieldError(_ textField: UITextField) {
            if isTimeTextFieldValid(textField) {
-               textField.layer.borderWidth = 0.0
-               textField.layer.borderColor = .none
-               isAllTextFieldsValid = true
+               hideTextFieldError(textField)
            } else {
-               textField.layer.borderWidth = 0.5
-               textField.layer.borderColor = UIColor.red.cgColor
-               isAllTextFieldsValid = false
+               showTextFieldError(textField)
            }
        }
        
        @objc private func showDistanceTextFieldError(_ textField: UITextField) {
            if isDistanceTextFieldValid(textField) {
-               textField.layer.borderWidth = 0.0
-               textField.layer.borderColor = .none
-               isAllTextFieldsValid = true
+               hideTextFieldError(textField)
            } else {
-               textField.layer.borderWidth = 0.5
-               textField.layer.borderColor = UIColor.red.cgColor
-               isAllTextFieldsValid = false
+               showTextFieldError(textField)
            }
        }
        
@@ -165,12 +169,8 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     }
     
     private func dateFieldDoneButtonAction(textField: UITextField, datePicker: UIDatePicker?) {
-        if textField.isEditing {
-            if let datePicker = datePicker {
-                if textField.inputView == datePicker {
-                    textField.text = datePicker.date.performDateFormattingToString()
-                }
-            }
+        if textField.isEditing, let datePicker = datePicker, textField.inputView == datePicker {
+            textField.text = datePicker.date.performDateFormattingToString()
             textField.resignFirstResponder()
         }
     }
