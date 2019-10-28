@@ -20,7 +20,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var timeTextField: UITextField!
     
     @IBOutlet weak var distanceTextField: UITextField!
-    private var isTextFieldValid = false
+    private var isAllTextFieldsValid = false
     private var pickedDate: Date?
     private var datePicker: UIDatePicker? {
         didSet { datePicker?.minimumDate = Date(timeIntervalSince1970: 0) }
@@ -47,8 +47,8 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         dateTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         timeTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         distanceTextField.inputAccessoryView = addOnlyToolbarDoneButton()
-        timeTextField.addTarget(self, action: #selector(checkTimeTextField(_:)), for: UIControl.Event.editingChanged)
-        distanceTextField.addTarget(self, action: #selector(checkDistanceTextField(_:)), for: UIControl.Event.editingChanged)
+        timeTextField.addTarget(self, action: #selector(showTimeTextFieldError(_:)), for: UIControl.Event.editingChanged)
+        distanceTextField.addTarget(self, action: #selector(showDistanceTextFieldError(_:)), for: UIControl.Event.editingChanged)
         self.hideKeyboardOnTouchUpInside()
     }
     
@@ -89,6 +89,46 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    @objc private func showTimeTextFieldError(_ textField: UITextField) {
+           if isTimeTextFieldValid(textField) {
+               textField.layer.borderWidth = 0.0
+               textField.layer.borderColor = .none
+               isAllTextFieldsValid = true
+           } else {
+               textField.layer.borderWidth = 0.5
+               textField.layer.borderColor = UIColor.red.cgColor
+               isAllTextFieldsValid = false
+           }
+       }
+       
+       @objc private func showDistanceTextFieldError(_ textField: UITextField) {
+           if isDistanceTextFieldValid(textField) {
+               textField.layer.borderWidth = 0.0
+               textField.layer.borderColor = .none
+               isAllTextFieldsValid = true
+           } else {
+               textField.layer.borderWidth = 0.5
+               textField.layer.borderColor = UIColor.red.cgColor
+               isAllTextFieldsValid = false
+           }
+       }
+       
+       private func isTimeTextFieldValid(_ textField: UITextField) -> Bool {
+           if let text = textField.text, let _ = Int(text) {
+               return true
+           } else {
+               return false
+           }
+       }
+       
+       private func isDistanceTextFieldValid(_ textField: UITextField) -> Bool {
+           if let text = textField.text, let _ = Double(text) {
+               return true
+           } else {
+               return false
+           }
+       }
+    
     // MARK: Private Methods
     
     private func getDateFromTextFieldText(text: String?) -> Date? {
@@ -100,30 +140,6 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
             return date
         } else {
             return nil
-        }
-    }
-    
-    @objc private func checkTimeTextField(_ textField: UITextField) {
-        if let text = textField.text, let _ = Int(text) {
-            textField.layer.borderWidth = 0.0
-            textField.layer.borderColor = .none
-            isTextFieldValid = true
-        } else {
-            textField.layer.borderWidth = 0.5
-            textField.layer.borderColor = UIColor.red.cgColor
-            isTextFieldValid = false
-        }
-    }
-    
-    @objc private func checkDistanceTextField(_ textField: UITextField) {
-        if let text = textField.text, let _ = Double(text) {
-            textField.layer.borderWidth = 0.0
-            textField.layer.borderColor = .none
-            isTextFieldValid = true
-        } else {
-            textField.layer.borderWidth = 0.5
-            textField.layer.borderColor = UIColor.red.cgColor
-            isTextFieldValid = false
         }
     }
     
@@ -166,11 +182,11 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         
         switch identifier {
         case "Save Jog":
-            if !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty && isTextFieldValid {
+            if ( !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty ) && ( isAllTextFieldsValid || isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
                 return true
             } else {
-                checkTimeTextField(timeTextField)
-                checkDistanceTextField(distanceTextField)
+                showTimeTextFieldError(timeTextField)
+                showDistanceTextFieldError(distanceTextField)
                 return false
             }
         default:
