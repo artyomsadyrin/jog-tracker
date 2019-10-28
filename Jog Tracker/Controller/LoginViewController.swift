@@ -116,7 +116,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
         
         switch segue.identifier {
         case "Show Jogs":
-            if let jogsVC = segue.destination.contents as? JogsViewController {
+            if let tabBarVC = segue.destination as? UITabBarController, let jogsVC = tabBarVC.viewControllers?[0].contents as? JogsViewController {
                 jogsVC.accessToken = authResponse?.accessToken
             }
         default:

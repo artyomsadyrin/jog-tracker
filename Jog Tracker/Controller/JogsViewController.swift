@@ -43,6 +43,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         jogsTableView.dataSource = self
         if let accessToken = accessToken {
             getUser(accessToken: accessToken)
+        } else {
+            os_log(.error, log: OSLog.default, "Can't get access token")
         }
         jogsTableView.refreshControl = jogsRefreshControl
         jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView(_:)), for: .valueChanged)
