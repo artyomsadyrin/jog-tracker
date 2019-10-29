@@ -23,7 +23,6 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     
     // MARK: Private Properties
     
-    private var isAllTextFieldsValid = false
     private var datePicker: UIDatePicker? {
         didSet { datePicker?.minimumDate = Date(timeIntervalSince1970: 0) }
     }
@@ -49,6 +48,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         dateTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         timeTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         distanceTextField.inputAccessoryView = addOnlyToolbarDoneButton()
+        dateTextField.addTarget(self, action: #selector(checkDateTextField(_:)), for: UIControl.Event.editingDidEnd)
         timeTextField.addTarget(self, action: #selector(checkTimeTextField(_:)), for: UIControl.Event.editingChanged)
         distanceTextField.addTarget(self, action: #selector(checkDistanceTextField(_:)), for: UIControl.Event.editingChanged)
         
@@ -68,8 +68,8 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     // MARK: Text Fields Methods
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-           return textField.resignFirstResponder()
-       }
+        return textField.resignFirstResponder()
+    }
     
     private func addOnlyToolbarDoneButton() -> UIToolbar {
         let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 30))
@@ -95,46 +95,60 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     private func showTextFieldError(_ textField: UITextField) {
         textField.layer.borderWidth = 0.5
         textField.layer.borderColor = UIColor.red.cgColor
-        isAllTextFieldsValid = false
     }
     
     private func hideTextFieldError(_ textField: UITextField) {
         textField.layer.borderWidth = 0.0
         textField.layer.borderColor = .none
-        isAllTextFieldsValid = true
     }
     
     @objc private func checkTimeTextField(_ textField: UITextField) {
-           if isTimeTextFieldValid(textField) {
-               hideTextFieldError(textField)
-           } else {
-               showTextFieldError(textField)
-           }
-       }
-       
-       @objc private func checkDistanceTextField(_ textField: UITextField) {
-           if isDistanceTextFieldValid(textField) {
-               hideTextFieldError(textField)
-           } else {
-               showTextFieldError(textField)
-           }
-       }
-       
-       private func isTimeTextFieldValid(_ textField: UITextField) -> Bool {
-           if let text = textField.text, Int(text) != nil {
-               return true
-           } else {
-               return false
-           }
-       }
-       
-       private func isDistanceTextFieldValid(_ textField: UITextField) -> Bool {
-           if let text = textField.text, Double(text) != nil {
-               return true
-           } else {
-               return false
-           }
-       }
+        if isTimeTextFieldValid(textField) {
+            hideTextFieldError(textField)
+        } else {
+            showTextFieldError(textField)
+        }
+    }
+    
+    @objc private func checkDistanceTextField(_ textField: UITextField) {
+        if isDistanceTextFieldValid(textField) {
+            hideTextFieldError(textField)
+        } else {
+            showTextFieldError(textField)
+        }
+    }
+    
+    @objc private func checkDateTextField(_ textField: UITextField) {
+        if isDateTextFieldValid(textField) {
+            hideTextFieldError(textField)
+        } else {
+            showTextFieldError(textField)
+        }
+    }
+    
+    private func isTimeTextFieldValid(_ textField: UITextField) -> Bool {
+        if let text = textField.text, Int(text) != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func isDistanceTextFieldValid(_ textField: UITextField) -> Bool {
+        if let text = textField.text, Double(text) != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func isDateTextFieldValid(_ textField: UITextField) -> Bool {
+        if let text = textField.text, getDateFromTextFieldText(text: text) != nil {
+            return true
+        } else {
+            return false
+        }
+    }
     
     // MARK: Private Methods
     
@@ -177,7 +191,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
             textField.resignFirstResponder()
         }
     }
-
+    
     // MARK: - Navigation
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -186,9 +200,10 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         switch identifier {
         case "Save Jog":
             if ( !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty ) &&
-                ( isAllTextFieldsValid || isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
+                ( isDateTextFieldValid(dateTextField) && isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
                 return true
             } else {
+                checkDateTextField(dateTextField)
                 checkTimeTextField(timeTextField)
                 checkDistanceTextField(distanceTextField)
                 return false
@@ -207,16 +222,16 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
             let time = Int(timeString),
             let distanceString = distanceTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
             let distance = Double(distanceString) {
-                if jog != nil {
-                    jog?.date = date
-                    jog?.time = time
-                    jog?.distance = distance
-                } else {
-                    jog = Jog(identifier: nil, userId: nil, distance: distance, time: time, date: date)
+            if jog != nil {
+                jog?.date = date
+                jog?.time = time
+                jog?.distance = distance
+            } else {
+                jog = Jog(identifier: nil, userId: nil, distance: distance, time: time, date: date)
             }
         } else {
             os_log(.error, log: OSLog.default, "Couldn't get parameter(-s) for saving jog")
         }
     }
-
+    
 }
