@@ -118,13 +118,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         switch segue.identifier {
         case "Show Jogs":
-            if let tabBarVC = segue.destination as? UITabBarController, let jogsVC = tabBarVC.viewControllers?[0].contents as? JogsViewController {
+            if let tabBarVC = segue.destination as? UITabBarController,
+                let jogsVC = tabBarVC.viewControllers?[0].contents as? JogsViewController,
+                let feedbackTVC = tabBarVC.viewControllers?[1].contents as? FeedbackTableViewController,
+                let reportVC = tabBarVC.viewControllers?[2].contents as? ReportViewController {
                 jogsVC.accessToken = authResponse?.accessToken
-            }
-            if let tabBarVC = segue.destination as? UITabBarController, let feedbackTVC = tabBarVC.viewControllers?[1].contents as? FeedbackTableViewController {
+                jogsVC.delegate = reportVC
                 feedbackTVC.accessToken = authResponse?.accessToken
-            }
-            if let tabBarVC = segue.destination as? UITabBarController, let reportVC = tabBarVC.viewControllers?[2].contents as? ReportViewController {
                 reportVC.accessToken = authResponse?.accessToken
             }
         default:

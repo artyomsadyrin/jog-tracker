@@ -9,10 +9,14 @@
 import UIKit
 import os.log
 
+protocol JogsViewControllerDelegate: class {
+    func updateReportTableView()
+}
+
 class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: Public Properties
-    
+    weak var delegate: JogsViewControllerDelegate?
     var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
     @IBOutlet weak var addJogButton: UIBarButtonItem!
@@ -197,6 +201,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.jogs = response.jogs.filter { $0.userId == passedUser.identifier }
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
+                        self.delegate?.updateReportTableView()
                         os_log(.debug, log: OSLog.default, "JogsVC: Sync users and jogs success")
                     }
             case .failure(let error):

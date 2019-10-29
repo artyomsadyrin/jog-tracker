@@ -9,7 +9,7 @@
 import UIKit
 import os.log
 
-class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JogsViewControllerDelegate {
     
     // MARK: Public Properties
     
@@ -66,6 +66,14 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         reportTableView.alpha = 1.0
         spinner.stopAnimating()
         reportTableView.reloadData()
+    }
+    
+    // MARK: JogsViewController Delegate
+    
+    func updateReportTableView() {
+        if let accessToken = accessToken, let user = user {
+            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+        }
     }
     
     // MARK: Private Methods
