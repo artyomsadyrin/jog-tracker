@@ -102,7 +102,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         spinner.stopAnimating()
         jogsTableView.reloadData()
     }
-
+    
     // MARK: Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,7 +111,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "JogTableViewCell"
-        
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? JogTableViewCell else {
             fatalError("The dequeued cell is not an instance of JogTableViewCell.")
@@ -193,7 +192,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
-                        os_log(.debug, log: OSLog.default, "Sync users and jogs success")
+                        os_log(.debug, log: OSLog.default, "JogsVC: Sync users and jogs success")
                     }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -315,42 +314,11 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
 }
 
-extension UIViewController {
-    var contents: UIViewController {
-        if let navcon = self as? UINavigationController {
-            return navcon.visibleViewController ?? self
-        } else {
-            return self
-        }
-    }
-}
-
-extension Date {
-    func performDateFormattingToString() -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
-        let dateInString = dateFormatter.string(from: self)
-        return dateInString
-    }
-}
-
 extension JogsViewController.JogsVCError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unknownSegue:
             return NSLocalizedString("Unexpected Segue Identifier.\nPlease report to the developer", comment: "Showing Jog Failed")
         }
-    }
-}
-
-extension UIViewController {
-    func hideKeyboardOnTouchUpInside() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    @objc func dismissKeyboard()
-    {
-        view.endEditing(true)
     }
 }

@@ -37,6 +37,10 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
         os_log(.debug, log: OSLog.default, "FeedbackVC loaded")
     }
     
+    deinit {
+        os_log(.debug, log: OSLog.default, "FeedbackTVC deinited")
+    }
+    
     // MARK: Private Methods
     
     private func showSavingAlert(result: Result<String,Error>) {
@@ -228,6 +232,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
                 DispatchQueue.main.async {
                     self.setViewToDefaultState()
                     self.showSavingAlert(result: result)
+                    os_log(.debug, log: OSLog.default, "Send feedback success")
                 }
             case .failure(_):
                 DispatchQueue.main.async {
