@@ -24,7 +24,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var addJogButton: UIBarButtonItem!
     private var user: User?
     private var jogs: [Jog]?
-    private var jogsForReport = [DateInterval: [Jog]]()
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .phone {
@@ -104,30 +103,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         jogsTableView.reloadData()
     }
     
-    private func sortJogsForReport(jogs: [Jog]?, jogsForReport: inout [DateInterval: [Jog]]) {
-        guard let jogs = jogs else {
-            return
-        }
-        
-        jogsForReport = jogs.groupedBy(dateComponent: .weekOfYear)
-        
-        for (groupedInterval, jogs) in jogsForReport {
-            print("----")
-            print("Interval for grouping: \(groupedInterval)")
-            
-            let avgTime = jogs.map { ( Double($0.time ?? 0)) }.reduce(0.0, +) / Double(jogs.count)
-            let totalDistance = jogs.map { ($0.distance ?? 0) }.reduce(0.0, +)
-            let avgDistance = totalDistance / Double(jogs.count)
-            let avgSpeed = avgDistance / avgTime
-            print("""
-                \(String(format: "Av. Speed: %.2f", avgSpeed))
-                \((String(format: "Av. Time: %.2f", avgTime)))
-                Total Distance: \(totalDistance)
-                """)
-        }
-        
-    }
-
     // MARK: Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -136,7 +111,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "JogTableViewCell"
-        
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? JogTableViewCell else {
             fatalError("The dequeued cell is not an instance of JogTableViewCell.")
@@ -216,10 +190,9 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let response):
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
-                    self.sortJogsForReport(jogs: self.jogs, jogsForReport: &self.jogsForReport)
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
-                        os_log(.debug, log: OSLog.default, "Sync users and jogs success")
+                        os_log(.debug, log: OSLog.default, "JogsVC: Sync users and jogs success")
                     }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -341,48 +314,11 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
 }
 
-extension UIViewController {
-    var contents: UIViewController {
-        if let navcon = self as? UINavigationController {
-            return navcon.visibleViewController ?? self
-        } else {
-            return self
-        }
-    }
-}
-
-extension Date {
-    func performDateFormattingToString() -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
-        let dateInString = dateFormatter.string(from: self)
-        return dateInString
-    }
-}
-
 extension JogsViewController.JogsVCError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unknownSegue:
             return NSLocalizedString("Unexpected Segue Identifier.\nPlease report to the developer", comment: "Showing Jog Failed")
         }
-    }
-}
-
-extension UIViewController {
-    func hideKeyboardOnTouchUpInside() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    @objc func dismissKeyboard()
-    {
-        view.endEditing(true)
-    }
-}
-
-extension Date {
-    var week: Int {
-        return Calendar.current.component(.weekOfYear, from: self)
     }
 }

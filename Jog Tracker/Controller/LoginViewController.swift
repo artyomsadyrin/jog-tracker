@@ -121,9 +121,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate
             }
             if let tabBarVC = segue.destination as? UITabBarController, let feedbackTVC = tabBarVC.viewControllers?[1].contents as? FeedbackTableViewController {
                 feedbackTVC.accessToken = authResponse?.accessToken
-                os_log(.error, log: OSLog.default, "Successfully passed access token to feedbackTVC")
-            } else {
-                os_log(.error, log: OSLog.default, "Can't get feedbackTVC")
+            }
+            if let tabBarVC = segue.destination as? UITabBarController, let reportVC = tabBarVC.viewControllers?[2].contents as? ReportViewController {
+                reportVC.accessToken = authResponse?.accessToken
             }
         default:
             showErrorAlert(error: LoginError.unknownSegue)
@@ -131,6 +131,47 @@ class LoginViewController: UIViewController, UITextFieldDelegate
     }
 
 }
+
+extension UIViewController {
+    var contents: UIViewController {
+        if let navcon = self as? UINavigationController {
+            return navcon.visibleViewController ?? self
+        } else {
+            return self
+        }
+    }
+}
+
+extension Date {
+    func performDateFormattingToString() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        let dateInString = dateFormatter.string(from: self)
+        return dateInString
+    }
+}
+
+extension DateInterval {
+    func formatToString() -> String? {
+        let formatter = DateIntervalFormatter()
+        formatter.dateTemplate = "yyyy-MM-dd"
+        let dateIntervalInString = formatter.string(from: self)
+        return dateIntervalInString
+    }
+}
+
+extension UIViewController {
+    func hideKeyboardOnTouchUpInside() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
+    }
+}
+
 
 extension UIButton {
     @IBInspectable var cornerRadius: CGFloat {
@@ -198,7 +239,6 @@ extension Array where Element: Dateable {
                 os_log(.error, log: OSLog.default, "Couldn't get date from date compoments")
                 return
             }
-            print("Date as dic key: \(dateInterval)")
             let existing = accumulator[dateInterval] ?? []
             accumulator[dateInterval] = existing + [current]
         }
@@ -206,3 +246,4 @@ extension Array where Element: Dateable {
         return groupedByDateComponents
     }
 }
+

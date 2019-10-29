@@ -37,6 +37,10 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
         os_log(.debug, log: OSLog.default, "FeedbackVC loaded")
     }
     
+    deinit {
+        os_log(.debug, log: OSLog.default, "FeedbackTVC deinited")
+    }
+    
     // MARK: Private Methods
     
     private func showSavingAlert(result: Result<String,Error>) {
