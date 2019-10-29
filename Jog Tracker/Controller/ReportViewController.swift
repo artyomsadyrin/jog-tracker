@@ -9,8 +9,7 @@
 import UIKit
 import os.log
 
-class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
-{
+class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Public Properties
     
@@ -202,7 +201,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
             switch result {
             case .success(let response):
                 os_log(.debug, log: OSLog.default, "ReportsVC: Sync users and jogs success")
-                let jogs = response.jogs.filter { $0.userId == passedUser.id }
+                let jogs = response.jogs.filter { $0.userId == passedUser.identifier }
                 self.groupJogs(jogs: jogs, reports: &self.reports)
             case .failure(let error):
                 DispatchQueue.main.async {

@@ -9,8 +9,7 @@
 import UIKit
 import os.log
 
-class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
-{
+class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: Public Properties
     
@@ -126,7 +125,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let jog = jogs[indexPath.row]
         
-        guard let identifier = jog.id, let distance = jog.distance, let time = jog.time, let date = jog.date?.performDateFormattingToString() else {
+        guard let identifier = jog.identifier, let distance = jog.distance, let time = jog.time, let date = jog.date?.performDateFormattingToString() else {
             return cell
         }
         
@@ -195,7 +194,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             switch result {
             case .success(let response):
-                    self.jogs = response.jogs.filter { $0.userId == passedUser.id }
+                    self.jogs = response.jogs.filter { $0.userId == passedUser.identifier }
                     DispatchQueue.main.async {
                         self.stopActivityIndicator()
                         os_log(.debug, log: OSLog.default, "JogsVC: Sync users and jogs success")
@@ -217,7 +216,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Delete jog success")
                     if let user = self.user {
@@ -242,7 +241,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Update user success")
                     if let user = self.user {
@@ -265,7 +264,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             switch result {
-            case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Add jog success")
                     if let user = self.user {
@@ -287,7 +286,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func unwindToJogsVC(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? EditJogViewController, let jog = sourceViewController.jog, let accessToken = accessToken {
             startActivityIndicator()
-            if let _ = sourceViewController.indexPathForEditMode {
+            if sourceViewController.indexPathForEditMode != nil {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     self?.updateJog(passedJog: jog, accessToken: accessToken)
                 }
@@ -311,7 +310,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 editJogVC.indexPathForEditMode = indexPath
                 let selectedJog = jogs?[indexPath.row]
                 editJogVC.jog = selectedJog
-                editJogVC.title = "Jog #\(selectedJog?.id ?? 0)"
+                editJogVC.title = "Jog #\(selectedJog?.identifier ?? 0)"
             }
         default:
             showErrorAlert(error: JogsVCError.unknownSegue)

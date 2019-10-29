@@ -8,8 +8,7 @@
 
 import UIKit
 
-class JogTableViewCell: UITableViewCell
-{
+class JogTableViewCell: UITableViewCell {
     
     @IBOutlet weak var identifierLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!

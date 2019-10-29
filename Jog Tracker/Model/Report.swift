@@ -8,8 +8,7 @@
 
 import Foundation
 
-struct Report
-{
+struct Report {
     
     // MARK: Public Properties
     

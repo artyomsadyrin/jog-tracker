@@ -9,8 +9,7 @@
 import UIKit
 import os.log
 
-class LoginViewController: UIViewController, UITextFieldDelegate
-{
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: Public Properties
 
@@ -135,8 +134,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate
 
 }
 
-extension UIViewController
-{
+extension UIViewController {
     var contents: UIViewController {
         if let navcon = self as? UINavigationController {
             return navcon.visibleViewController ?? self
@@ -146,8 +144,7 @@ extension UIViewController
     }
 }
 
-extension Date
-{
+extension Date {
     func performDateFormattingToString() -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, yyyy"
@@ -156,8 +153,7 @@ extension Date
     }
 }
 
-extension DateInterval
-{
+extension DateInterval {
     func formatToString() -> String? {
         let formatter = DateIntervalFormatter()
         formatter.dateTemplate = "yyyy-MM-dd"
@@ -166,22 +162,18 @@ extension DateInterval
     }
 }
 
-extension UIViewController
-{
+extension UIViewController {
     func hideKeyboardOnTouchUpInside() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    @objc func dismissKeyboard()
-    {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 }
 
-
-extension UIButton
-{
+extension UIButton {
     @IBInspectable var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
@@ -211,8 +203,7 @@ extension UIButton
     }
 }
 
-extension LoginViewController.LoginError: LocalizedError
-{
+extension LoginViewController.LoginError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyField:
@@ -223,8 +214,7 @@ extension LoginViewController.LoginError: LocalizedError
     }
 }
 
-extension UITextField
-{
+extension UITextField {
     var isEmpty: Bool {
         if let text = self.text, text.isEmpty {
             return true
@@ -234,8 +224,7 @@ extension UITextField
     }
 }
 
-extension Array where Element: Dateable
-{
+extension Array where Element: Dateable {
     func groupedBy(dateComponent: Calendar.Component) -> [DateInterval: [Element]] {
         let initial: [DateInterval: [Element]] = [:]
         let groupedByDateComponents = reduce(into: initial) { accumulator, current in
@@ -257,4 +246,3 @@ extension Array where Element: Dateable
         return groupedByDateComponents
     }
 }
-

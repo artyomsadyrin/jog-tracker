@@ -9,8 +9,7 @@
 import UIKit
 import os.log
 
-class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource
-{
+class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     // MARK: Public Properties
     
@@ -46,7 +45,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
     
     // MARK: Private Methods
     
-    private func showSavingAlert(result: Result<String,Error>) {
+    private func showSavingAlert(result: Result<String, Error>) {
         var message = String()
         
         switch result {
@@ -231,19 +230,18 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
             }
             
             switch result {
-            case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     self.reverseFieldsToDefaultState()
                     self.showSavingAlert(result: result)
                     os_log(.debug, log: OSLog.default, "Send feedback success")
                 }
-            case .failure(_):
+            case .failure:
                 DispatchQueue.main.async {
                     self.showSavingAlert(result: result)
                 }
             }
         }
     }
-    
     
 }

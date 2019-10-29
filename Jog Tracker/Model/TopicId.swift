@@ -8,8 +8,7 @@
 
 import Foundation
 
-enum TopicId: Int, CaseIterable
-{
+enum TopicId: Int, CaseIterable {
     case one = 1
     case two = 2
     case three = 3

@@ -8,8 +8,7 @@
 
 import UIKit
 
-class ReportTableViewCell: UITableViewCell
-{
+class ReportTableViewCell: UITableViewCell {
 
     @IBOutlet weak var intervalLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!

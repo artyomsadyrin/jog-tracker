@@ -9,8 +9,7 @@
 import UIKit
 import os.log
 
-class EditJogViewController: UITableViewController, UITextFieldDelegate
-{
+class EditJogViewController: UITableViewController, UITextFieldDelegate {
     
     // MARK: Public Properties
     
@@ -122,7 +121,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate
        }
        
        private func isTimeTextFieldValid(_ textField: UITextField) -> Bool {
-           if let text = textField.text, let _ = Int(text) {
+           if let text = textField.text, Int(text) != nil {
                return true
            } else {
                return false
@@ -130,7 +129,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate
        }
        
        private func isDistanceTextFieldValid(_ textField: UITextField) -> Bool {
-           if let text = textField.text, let _ = Double(text) {
+           if let text = textField.text, Double(text) != nil {
                return true
            } else {
                return false
@@ -186,7 +185,8 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate
         
         switch identifier {
         case "Save Jog":
-            if ( !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty ) && ( isAllTextFieldsValid || isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
+            if ( !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty ) &&
+                ( isAllTextFieldsValid || isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
                 return true
             } else {
                 checkTimeTextField(timeTextField)
@@ -212,7 +212,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate
                     jog?.time = time
                     jog?.distance = distance
                 } else {
-                    jog = Jog(id: nil, userId: nil, distance: distance, time: time, date: date)
+                    jog = Jog(identifier: nil, userId: nil, distance: distance, time: time, date: date)
             }
         } else {
             os_log(.error, log: OSLog.default, "Couldn't get parameter(-s) for saving jog")

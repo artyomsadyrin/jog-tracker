@@ -8,9 +8,8 @@
 
 import Foundation
 
-struct User: Codable
-{
-    let id: String?
+struct User: Codable {
+    let identifier: String?
     var email: String?
     var phone: String?
     var role: String?
@@ -18,8 +17,7 @@ struct User: Codable
     var lastName: String?
 }
 
-extension User
-{
+extension User {
     struct CodingData: Codable {
         struct ResponseContainer: Codable {
             let id: String?
@@ -33,11 +31,10 @@ extension User
     }
 }
 
-extension User.CodingData
-{
+extension User.CodingData {
     var user: User {
         return User(
-            id: response.id,
+            identifier: response.id,
             email: response.email,
             phone: response.phone,
             role: response.role,
