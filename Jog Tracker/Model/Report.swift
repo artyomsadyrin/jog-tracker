@@ -8,9 +8,15 @@
 
 import Foundation
 
-struct Report {
+struct Report
+{
+    
+    // MARK: Public Properties
+    
     let weekInterval: DateInterval
     let jogs: [Jog]
+    
+    // MARK: Private Properties
     
     private var totalDistance: Double {
         return jogs.map { ( Double($0.distance ?? 0)) }.reduce(0.0, +)
@@ -19,10 +25,14 @@ struct Report {
         return jogs.map { ( Double($0.time ?? 0)) }.reduce(0.0, +)
     }
     
+    // MARK: Init
+    
     init(weekInterval: DateInterval, jogs: [Jog]) {
         self.weekInterval = weekInterval
         self.jogs = jogs
     }
+    
+    // MARK: Public Methods
     
     func getNumberOfWeek() -> Int? {
         if let dateOfFirstValue = jogs.first?.date {
@@ -43,4 +53,5 @@ struct Report {
     func getTotalDistance() -> Double {
         return totalDistance
     }
+    
 }

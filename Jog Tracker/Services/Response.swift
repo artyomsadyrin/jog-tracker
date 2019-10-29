@@ -8,12 +8,14 @@
 
 import Foundation
 
-struct Response: Codable {
+struct Response: Codable
+{
     let jogs: [Jog]
     let users: [User]
 }
 
-extension Response {
+extension Response
+{
     struct CodingData: Codable {
         struct ResponseContainer: Codable {
             struct JogsContainer: Codable {
@@ -38,7 +40,8 @@ extension Response {
     }
 }
 
-extension Response.CodingData {
+extension Response.CodingData
+{
     var passedResponse: Response {
         return Response(
             jogs: response.jogs.map {

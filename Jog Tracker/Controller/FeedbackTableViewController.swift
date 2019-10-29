@@ -9,16 +9,19 @@
 import UIKit
 import os.log
 
-class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource
+{
     
-    // MARK: Properties
+    // MARK: Public Properties
     
     @IBOutlet weak var topicIdTextField: UITextField!
-    private let placeholderForFeedbackTextView = "Enter your feedback text"
     @IBOutlet weak var feedbackTextView: UITextView!
-
-    private var feedback: Feedback?
     var accessToken: String?
+    
+    // MARK: Private Properties
+    
+    private let placeholderForFeedbackTextView = "Enter your feedback text"
+    private var feedback: Feedback?
     private var pickedTopicId: TopicId?
     private let topicIdPickerData: [TopicId] = TopicId.allCases
     private var topicIdPickerView = UIPickerView()
@@ -27,14 +30,14 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardOnTouchUpInside()
+        os_log(.debug, log: OSLog.default, "FeedbackVC loaded")
         
-        self.clearsSelectionOnViewWillAppear = false
         feedbackTextView.delegate = self
         addPlacehoderToTextView(feedbackTextView)
-        self.hideKeyboardOnTouchUpInside()
+        
         setUpTopicIdPickerView()
         topicIdTextField.inputAccessoryView = addOnlyToolbarDoneButton()
-        os_log(.debug, log: OSLog.default, "FeedbackVC loaded")
     }
     
     deinit {
@@ -65,7 +68,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
         present(alert, animated: true)
     }
     
-    private func setViewToDefaultState() {
+    private func reverseFieldsToDefaultState() {
         feedback = nil
         setDefaultValueForTopicIdPickerView()
         addPlacehoderToTextView(feedbackTextView)
@@ -230,7 +233,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
             switch result {
             case .success(_):
                 DispatchQueue.main.async {
-                    self.setViewToDefaultState()
+                    self.reverseFieldsToDefaultState()
                     self.showSavingAlert(result: result)
                     os_log(.debug, log: OSLog.default, "Send feedback success")
                 }

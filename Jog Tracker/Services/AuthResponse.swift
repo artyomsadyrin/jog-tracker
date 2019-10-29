@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct AuthResponse: Codable {
+struct AuthResponse: Codable
+{
     let accessToken: String?
     let tokenType: String?
     let expiresIn: Int?
@@ -16,7 +17,8 @@ struct AuthResponse: Codable {
     let createdAt: Int?
 }
 
-extension AuthResponse {
+extension AuthResponse
+{
     struct CodingData: Codable {
         struct ResponseContainer: Codable {
             let accessToken: String?
@@ -30,7 +32,8 @@ extension AuthResponse {
     }
 }
 
-extension AuthResponse.CodingData {
+extension AuthResponse.CodingData
+{
     var authResponse: AuthResponse {
         return AuthResponse(accessToken: response.accessToken, tokenType: response.tokenType, expiresIn: response.expiresIn, scope: response.scope, createdAt: response.createdAt)
     }

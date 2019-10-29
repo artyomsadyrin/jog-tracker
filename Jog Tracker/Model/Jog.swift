@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct Jog: Codable, Dateable {
+struct Jog: Codable, Dateable
+{
     let id: Int?
     let userId: String?
     var distance: Double?

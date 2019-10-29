@@ -12,18 +12,12 @@ import os.log
 class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
 
-    // MARK: Properties
+    // MARK: Public Properties
     
     var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
-    fileprivate enum JogsVCError: Error {
-        case unknownSegue
-    }
-    private var isDeletionHappening = false
-    private let jogsRefreshControl = UIRefreshControl()
     @IBOutlet weak var addJogButton: UIBarButtonItem!
-    private var user: User?
-    private var jogs: [Jog]?
+    
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .phone {
@@ -33,6 +27,16 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
     }
+    
+    // MARK: Private Properties
+    
+    fileprivate enum JogsVCError: Error {
+        case unknownSegue
+    }
+    private var isDeletionHappening = false
+    private let jogsRefreshControl = UIRefreshControl()
+    private var user: User?
+    private var jogs: [Jog]?
     
     // MARK: General Methods
 
@@ -133,6 +137,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         return cell
     }
+    
+    // MARK: Table View Delegate
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {

@@ -9,24 +9,25 @@
 import UIKit
 import os.log
 
-class EditJogViewController: UITableViewController, UITextFieldDelegate {
+class EditJogViewController: UITableViewController, UITextFieldDelegate
+{
     
-    // MARK: Properties
+    // MARK: Public Properties
     
     @IBOutlet weak var jogTableView: UITableView!
-    
     @IBOutlet weak var dateTextField: UITextField!
-    
     @IBOutlet weak var timeTextField: UITextField!
-    
     @IBOutlet weak var distanceTextField: UITextField!
+    
+    var jog: Jog?
+    var indexPathForEditMode: IndexPath?
+    
+    // MARK: Private Properties
+    
     private var isAllTextFieldsValid = false
-    private var pickedDate: Date?
     private var datePicker: UIDatePicker? {
         didSet { datePicker?.minimumDate = Date(timeIntervalSince1970: 0) }
     }
-    var jog: Jog?
-    var indexPathForEditMode: IndexPath?
     
     // MARK: General Methods
     
@@ -38,17 +39,20 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         dateTextField.delegate = self
         timeTextField.delegate = self
         distanceTextField.delegate = self
+        
         if let jog = jog {
             dateTextField.text = jog.date?.performDateFormattingToString()
             timeTextField.text = jog.time?.description
             distanceTextField.text = jog.distance?.description
         }
+        
         setUpDatePicker()
         dateTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         timeTextField.inputAccessoryView = addOnlyToolbarDoneButton()
         distanceTextField.inputAccessoryView = addOnlyToolbarDoneButton()
-        timeTextField.addTarget(self, action: #selector(showTimeTextFieldError(_:)), for: UIControl.Event.editingChanged)
-        distanceTextField.addTarget(self, action: #selector(showDistanceTextFieldError(_:)), for: UIControl.Event.editingChanged)
+        timeTextField.addTarget(self, action: #selector(checkTimeTextField(_:)), for: UIControl.Event.editingChanged)
+        distanceTextField.addTarget(self, action: #selector(checkDistanceTextField(_:)), for: UIControl.Event.editingChanged)
+        
         self.hideKeyboardOnTouchUpInside()
     }
     
@@ -62,11 +66,11 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        return textField.resignFirstResponder()
-    }
-    
     // MARK: Text Fields Methods
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+           return textField.resignFirstResponder()
+       }
     
     private func addOnlyToolbarDoneButton() -> UIToolbar {
         let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 30))
@@ -101,7 +105,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
         isAllTextFieldsValid = true
     }
     
-    @objc private func showTimeTextFieldError(_ textField: UITextField) {
+    @objc private func checkTimeTextField(_ textField: UITextField) {
            if isTimeTextFieldValid(textField) {
                hideTextFieldError(textField)
            } else {
@@ -109,7 +113,7 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
            }
        }
        
-       @objc private func showDistanceTextFieldError(_ textField: UITextField) {
+       @objc private func checkDistanceTextField(_ textField: UITextField) {
            if isDistanceTextFieldValid(textField) {
                hideTextFieldError(textField)
            } else {
@@ -185,8 +189,8 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
             if ( !dateTextField.isEmpty && !timeTextField.isEmpty && !distanceTextField.isEmpty ) && ( isAllTextFieldsValid || isTimeTextFieldValid(timeTextField) && isDistanceTextFieldValid(distanceTextField) ) {
                 return true
             } else {
-                showTimeTextFieldError(timeTextField)
-                showDistanceTextFieldError(distanceTextField)
+                checkTimeTextField(timeTextField)
+                checkDistanceTextField(distanceTextField)
                 return false
             }
         default:
@@ -197,15 +201,21 @@ class EditJogViewController: UITableViewController, UITextFieldDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if let dateString = dateTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), let date = getDateFromTextFieldText(text: dateString),
-            let timeString = timeTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), let time = Int(timeString), let distanceString = distanceTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), let distance = Double(distanceString) {
-            if jog != nil {
-                jog?.date = date
-                jog?.time = time
-                jog?.distance = distance
-            } else {
-                jog = Jog(id: nil, userId: nil, distance: distance, time: time, date: date)
+        if let dateString = dateTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+            let date = getDateFromTextFieldText(text: dateString),
+            let timeString = timeTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+            let time = Int(timeString),
+            let distanceString = distanceTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+            let distance = Double(distanceString) {
+                if jog != nil {
+                    jog?.date = date
+                    jog?.time = time
+                    jog?.distance = distance
+                } else {
+                    jog = Jog(id: nil, userId: nil, distance: distance, time: time, date: date)
             }
+        } else {
+            os_log(.error, log: OSLog.default, "Couldn't get parameter(-s) for saving jog")
         }
     }
 

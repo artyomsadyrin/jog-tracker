@@ -393,7 +393,8 @@ class NetworkManager
 }
 
 
-enum NetworkError: Error {
+enum NetworkError: Error
+{
     case clientError
     case failedEncodeToData
     case wrongURL
@@ -403,7 +404,8 @@ enum NetworkError: Error {
     case unknownError
 }
 
-extension NetworkError: LocalizedError {
+extension NetworkError: LocalizedError
+{
     var errorDescription: String? {
         switch self {
         case .internalServerError:

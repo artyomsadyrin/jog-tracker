@@ -8,6 +8,7 @@
 
 import Foundation
 
-protocol Dateable {
+protocol Dateable
+{
     var date: Date? { get set }
 }

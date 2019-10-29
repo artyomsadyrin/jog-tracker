@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct Feedback: Codable {
+struct Feedback: Codable
+{
     var topicId: Int
     var text: String
 }

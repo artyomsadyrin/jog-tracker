@@ -9,16 +9,16 @@
 import UIKit
 import os.log
 
-class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
     
-    // MARK: Properties
+    // MARK: Public Properties
     
     var reports: [Report]?
     var accessToken: String?
-    private var user: User?
-    private var isReportsAscendingOrder = true
+    
     @IBOutlet weak var reportTableView: UITableView!
-    private let reportsRefreshControl = UIRefreshControl()
+    
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .phone {
@@ -29,15 +29,24 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    // MARK: Private Properties
+    
+    private var user: User?
+    private var isReportsAscendingOrder = true
+    private let reportsRefreshControl = UIRefreshControl()
+    
     // MARK: General Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         reportTableView.delegate = self
         reportTableView.dataSource = self
+        
         if let accessToken = accessToken {
             getUser(accessToken: accessToken)
         }
+        
         reportTableView.refreshControl = reportsRefreshControl
         reportsRefreshControl.addTarget(self, action: #selector(refreshReportTableView(_:)), for: .valueChanged)
     }
@@ -48,17 +57,17 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: Activity Indicator Methods
     
-        private func startActivityIndicator() {
-           reportTableView.alpha = 0.5
-           spinner.isHidden = false
-           spinner.startAnimating()
-       }
-       
-       private func stopActivityIndicator() {
-           reportTableView.alpha = 1.0
-           spinner.stopAnimating()
-           reportTableView.reloadData()
-       }
+    private func startActivityIndicator() {
+        reportTableView.alpha = 0.5
+        spinner.isHidden = false
+        spinner.startAnimating()
+    }
+    
+    private func stopActivityIndicator() {
+        reportTableView.alpha = 1.0
+        spinner.stopAnimating()
+        reportTableView.reloadData()
+    }
     
     // MARK: Private Methods
     
@@ -78,12 +87,15 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private func groupJogs(jogs: [Jog], reports: inout [Report]?) {
         let groupedJogs = jogs.groupedBy(dateComponent: .weekOfYear)
         reports = [Report]()
+        
         for (interval, jogs) in groupedJogs {
             let report = Report(weekInterval: interval, jogs: jogs)
             reports?.append(report)
         }
+        
         reports?.sort(by: { $0.weekInterval < $1.weekInterval })
         isReportsAscendingOrder = true
+        
         DispatchQueue.main.async { [weak self] in
             self?.stopActivityIndicator()
             os_log(.debug, log: OSLog.default, "Group jogs by week success")
@@ -91,11 +103,11 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @objc private func refreshReportTableView(_ sender: Any?) {
-           if let accessToken = accessToken, let user = user {
-               syncUsersAndJogs(accessToken: accessToken, passedUser: user)
-               reportsRefreshControl.endRefreshing()
-           }
-       }
+        if let accessToken = accessToken, let user = user {
+            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+            reportsRefreshControl.endRefreshing()
+        }
+    }
     
     // MARK: Action Methods
     
@@ -117,9 +129,8 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    
     // MARK: Table View DataSource
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return reports?.count ?? 0
     }
@@ -137,8 +148,9 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         let report = reports[indexPath.row]
         
-        if let weekInterval = report.weekInterval.formatToString(), let numberOfWeek = report.getNumberOfWeek() {
-            cell.intervalLabel.text = "Week \(numberOfWeek): (\(weekInterval.replacingOccurrences(of: "–", with: "/")))"
+        if let weekInterval = report.weekInterval.formatToString()?.replacingOccurrences(of: "–", with: "/"),
+            let numberOfWeek = report.getNumberOfWeek() {
+            cell.intervalLabel.text = "Week \(numberOfWeek): (\(weekInterval))"
         }
         cell.avgSpeedLabel.text = String(format: "Av. Speed: %.2f", report.getAvgSpeed())
         cell.avgTimeLabel.text = String(format: "Av. Time: %.2f", report.getAvgTime())
@@ -189,9 +201,9 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             switch result {
             case .success(let response):
-                    os_log(.debug, log: OSLog.default, "ReportsVC: Sync users and jogs success")
-                    let jogs = response.jogs.filter { $0.userId == passedUser.id }
-                    self.groupJogs(jogs: jogs, reports: &self.reports)
+                os_log(.debug, log: OSLog.default, "ReportsVC: Sync users and jogs success")
+                let jogs = response.jogs.filter { $0.userId == passedUser.id }
+                self.groupJogs(jogs: jogs, reports: &self.reports)
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.stopActivityIndicator()

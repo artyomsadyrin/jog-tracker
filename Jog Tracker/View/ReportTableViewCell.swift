@@ -8,13 +8,12 @@
 
 import UIKit
 
-class ReportTableViewCell: UITableViewCell {
+class ReportTableViewCell: UITableViewCell
+{
 
     @IBOutlet weak var intervalLabel: UILabel!
-    
     @IBOutlet weak var avgSpeedLabel: UILabel!
-    
     @IBOutlet weak var avgTimeLabel: UILabel!
-    
     @IBOutlet weak var totalDistanceLabel: UILabel!
+    
 }
