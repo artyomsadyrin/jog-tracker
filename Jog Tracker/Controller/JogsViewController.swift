@@ -104,20 +104,26 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         jogsTableView.reloadData()
     }
     
-    private func sortJogsForReport() {
+    private func sortJogsForReport(jogs: [Jog]?, jogsForReport: inout [DateInterval: [Jog]]) {
         guard let jogs = jogs else {
             return
         }
         
         jogsForReport = jogs.groupedBy(dateComponent: .weekOfYear)
         
-        
-        for (groupedDate, jogs) in jogsForReport {
+        for (groupedInterval, jogs) in jogsForReport {
             print("----")
-            print("Interval for grouping: \(groupedDate)")
-            for jog in jogs {
-                print("Jog date: \(jog.date ?? Date.init(timeIntervalSince1970: 0.0))")
-            }
+            print("Interval for grouping: \(groupedInterval)")
+            
+            let avgTime = jogs.map { ( Double($0.time ?? 0)) }.reduce(0.0, +) / Double(jogs.count)
+            let totalDistance = jogs.map { ($0.distance ?? 0) }.reduce(0.0, +)
+            let avgDistance = totalDistance / Double(jogs.count)
+            let avgSpeed = avgDistance / avgTime
+            print("""
+                \(String(format: "Av. Speed: %.2f", avgSpeed))
+                \((String(format: "Av. Time: %.2f", avgTime)))
+                Total Distance: \(totalDistance)
+                """)
         }
         
     }
@@ -210,8 +216,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let response):
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
+                    self.sortJogsForReport(jogs: self.jogs, jogsForReport: &self.jogsForReport)
                     DispatchQueue.main.async {
-                        self.sortJogsForReport()
                         self.stopActivityIndicator()
                         os_log(.debug, log: OSLog.default, "Sync users and jogs success")
                     }
