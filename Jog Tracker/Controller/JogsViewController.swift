@@ -24,6 +24,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var addJogButton: UIBarButtonItem!
     private var user: User?
     private var jogs: [Jog]?
+    private var jogsForReport = [DateInterval: [Jog]]()
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .phone {
@@ -103,21 +104,20 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         jogsTableView.reloadData()
     }
     
-    private func filterJogs(_ response: Response) {
-        let calendar = Calendar.current
-        let dates = response.jogs.map { (jog) -> Date in
-            if let date = jog.date {
-                return date
-            } else {
-                return Date(timeIntervalSince1970: 0.0)
-            }
+    private func sortJogsForReport() {
+        guard let jogs = jogs else {
+            return
         }
-        let minDate = dates.min { $0 < $1 }
-        let maxDate = dates.max()
-        if let minDate = minDate, let maxDate = maxDate {
-            print("Minimum date: \(minDate.performDateFormattingToString()!), Maximum date: \(maxDate.performDateFormattingToString()!)")
-            let countOfWeeks = calendar.dateComponents([.weekOfYear], from: minDate, to: maxDate)
-            print("Count of weeks between min and max date: \(countOfWeeks.debugDescription)")
+        
+        jogsForReport = jogs.groupedBy(dateComponent: .weekOfYear)
+        
+        
+        for (groupedDate, jogs) in jogsForReport {
+            print("----")
+            print("Interval for grouping: \(groupedDate)")
+            for jog in jogs {
+                print("Jog date: \(jog.date ?? Date.init(timeIntervalSince1970: 0.0))")
+            }
         }
         
     }
@@ -210,8 +210,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch result {
             case .success(let response):
                     self.jogs = response.jogs.filter { $0.userId == passedUser.id }
-                    self.filterJogs(response)
                     DispatchQueue.main.async {
+                        self.sortJogsForReport()
                         self.stopActivityIndicator()
                         os_log(.debug, log: OSLog.default, "Sync users and jogs success")
                     }

@@ -182,3 +182,27 @@ extension UITextField {
         }
     }
 }
+
+extension Array where Element: Dateable {
+    func groupedBy(dateComponent: Calendar.Component) -> [DateInterval: [Element]] {
+        let initial: [DateInterval: [Element]] = [:]
+        let groupedByDateComponents = reduce(into: initial) { accumulator, current in
+            guard let currentDate = current.date else {
+                os_log(.error, log: OSLog.default, "Couldn't get date")
+                return
+            }
+            
+            let calendar = Calendar.autoupdatingCurrent
+            
+            guard let dateInterval = calendar.dateInterval(of: dateComponent, for: currentDate) else {
+                os_log(.error, log: OSLog.default, "Couldn't get date from date compoments")
+                return
+            }
+            print("Date as dic key: \(dateInterval)")
+            let existing = accumulator[dateInterval] ?? []
+            accumulator[dateInterval] = existing + [current]
+        }
+        
+        return groupedByDateComponents
+    }
+}
