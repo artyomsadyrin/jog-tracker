@@ -16,6 +16,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var reports: [Report]?
     var accessToken: String?
     private var user: User?
+    private var isReportsAscendingOrder = true
     @IBOutlet weak var reportTableView: UITableView!
     private let reportsRefreshControl = UIRefreshControl()
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
@@ -82,6 +83,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
             reports?.append(report)
         }
         reports?.sort(by: { $0.weekInterval < $1.weekInterval })
+        isReportsAscendingOrder = true
         DispatchQueue.main.async { [weak self] in
             self?.stopActivityIndicator()
             os_log(.debug, log: OSLog.default, "Group jogs by week success")
@@ -100,6 +102,21 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBAction func back(_ sender: UIBarButtonItem) {
         presentingViewController?.dismiss(animated: true)
     }
+    
+    @IBAction func sort(_ sender: UIBarButtonItem) {
+        if reports != nil {
+            if isReportsAscendingOrder {
+                reports?.sort(by: { $0.weekInterval > $1.weekInterval })
+                reportTableView.reloadData()
+                isReportsAscendingOrder = false
+            } else {
+                reports?.sort(by: { $0.weekInterval < $1.weekInterval })
+                isReportsAscendingOrder = true
+                reportTableView.reloadData()
+            }
+        }
+    }
+    
     
     // MARK: Table View DataSource
 
