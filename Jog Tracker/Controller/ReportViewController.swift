@@ -20,11 +20,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                spinner.style = .medium
-            } else if UIDevice.current.userInterfaceIdiom == .pad {
-                spinner.style = .large
-            }
+            spinner.madeAdaptable()
         }
     }
     

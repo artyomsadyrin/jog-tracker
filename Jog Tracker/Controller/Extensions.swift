@@ -108,3 +108,15 @@ extension Array where Element: Dateable {
         return groupedByDateComponents
     }
 }
+
+extension UIActivityIndicatorView {
+    func madeAdaptable() {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            self.style = .white
+            self.color = .black
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            self.style = .whiteLarge
+            self.color = .black
+        }
+    }
+}
