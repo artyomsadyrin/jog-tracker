@@ -15,8 +15,15 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var reports: [Report]?
     var accessToken: String?
-    
+
     @IBOutlet weak var reportTableView: UITableView!
+    @IBOutlet weak var sortBarButtonItem: UIBarButtonItem! {
+        didSet {
+            if #available(iOS 13, *) { } else {
+                sortBarButtonItem.title = "Sort"
+            }
+        }
+    }
     
     @IBOutlet weak var spinner: UIActivityIndicatorView! {
         didSet {

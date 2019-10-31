@@ -646,6 +646,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="reportTableView" destination="qFg-ci-vw5" id="0AT-o9-dJz"/>
+                        <outlet property="sortBarButtonItem" destination="YhD-iD-ZIN" id="R8x-ku-6no"/>
                         <outlet property="spinner" destination="ltH-2R-sMR" id="V8g-j2-FYo"/>
                     </connections>
                 </viewController>
