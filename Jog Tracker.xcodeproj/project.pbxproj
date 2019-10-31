@@ -11,6 +11,7 @@
 		8E10E0A52368384B005BF2E9 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E10E0A42368384B005BF2E9 /* ReportViewController.swift */; };
 		8E10E0A723683CA3005BF2E9 /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E10E0A623683CA3005BF2E9 /* ReportTableViewCell.swift */; };
 		8E10E0A923683E86005BF2E9 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E10E0A823683E86005BF2E9 /* Report.swift */; };
+		8E3DA3D6236ADEDC000F9190 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3DA3D5236ADEDC000F9190 /* Extensions.swift */; };
 		8E3E6BE22361A0A90001D915 /* EditJogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */; };
 		8E3E6BE42361A2F80001D915 /* JogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */; };
 		8E3E6BE72361C2D30001D915 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3E6BE62361C2D30001D915 /* NetworkManager.swift */; };
@@ -34,6 +35,7 @@
 		8E10E0A42368384B005BF2E9 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		8E10E0A623683CA3005BF2E9 /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		8E10E0A823683E86005BF2E9 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		8E3DA3D5236ADEDC000F9190 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditJogViewController.swift; sourceTree = "<group>"; };
 		8E3E6BE32361A2F80001D915 /* JogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JogTableViewCell.swift; sourceTree = "<group>"; };
 		8E3E6BE62361C2D30001D915 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				8E3E6BE12361A0A90001D915 /* EditJogViewController.swift */,
 				8EC67C232366D73E0098782D /* FeedbackTableViewController.swift */,
 				8E10E0A42368384B005BF2E9 /* ReportViewController.swift */,
+				8E3DA3D5236ADEDC000F9190 /* Extensions.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E10E0A923683E86005BF2E9 /* Report.swift in Sources */,
+				8E3DA3D6236ADEDC000F9190 /* Extensions.swift in Sources */,
 				8E3E6BE72361C2D30001D915 /* NetworkManager.swift in Sources */,
 				8E7141A323609686005968AA /* LoginViewController.swift in Sources */,
 				8E9F96262366EDCD00993910 /* Feedback.swift in Sources */,
