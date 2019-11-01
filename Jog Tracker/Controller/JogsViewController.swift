@@ -17,7 +17,6 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // MARK: Public Properties
     weak var delegate: JogsViewControllerDelegate?
-    var accessToken: String?
     @IBOutlet weak var jogsTableView: UITableView!
     @IBOutlet weak var addJogButton: UIBarButtonItem!
     
@@ -44,11 +43,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.modalPresentationStyle = .fullScreen
         jogsTableView.delegate = self
         jogsTableView.dataSource = self
-        if let accessToken = accessToken {
-            getUser(accessToken: accessToken)
-        } else {
-            os_log(.error, log: OSLog.default, "Can't get access token")
-        }
+        getUser()
         jogsTableView.refreshControl = jogsRefreshControl
         jogsRefreshControl.addTarget(self, action: #selector(refreshJogsTableView(_:)), for: .valueChanged)
     }
@@ -84,8 +79,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @objc private func refreshJogsTableView(_ sender: Any?) {
-        if let accessToken = accessToken, let user = user {
-            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+        if let user = user {
+            syncUsersAndJogs(passedUser: user)
             jogsRefreshControl.endRefreshing()
         }
     }
@@ -141,12 +136,12 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if let deletedJog = jogs?[indexPath.row], let accessToken = accessToken {
+            if let deletedJog = jogs?[indexPath.row] {
                 jogs?.remove(at: indexPath.row)
                 startActivityIndicator()
                 isDeletionHappening = true
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    self?.deleteJog(passedJog: deletedJog, accessToken: accessToken)
+                    self?.deleteJog(passedJog: deletedJog)
                 }
             }
         }
@@ -154,11 +149,11 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: Network Methods
     
-    private func getUser(accessToken: String) {
+    private func getUser() {
         DispatchQueue.main.async { [weak self] in
             self?.startActivityIndicator()
         }
-        NetworkManager.getUser(accessToken: accessToken) { [weak self] result in
+        NetworkManager.getUser { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -169,7 +164,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.user = user
                     os_log(.debug, log: OSLog.default, "Get user success")
                     DispatchQueue.global(qos: .userInitiated).async {
-                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(passedUser: user)
                     }
                 }
             case .failure(let error):
@@ -181,13 +176,13 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func syncUsersAndJogs(accessToken: String, passedUser: User) {
+    private func syncUsersAndJogs(passedUser: User) {
         if user != nil || !isDeletionHappening {
             DispatchQueue.main.async { [weak self] in
                 self?.startActivityIndicator()
             }
         }
-        NetworkManager.syncUsersAndJogs(accessToken: accessToken) { [weak self] result in
+        NetworkManager.syncUsersAndJogs { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -210,8 +205,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func deleteJog(passedJog: Jog, accessToken: String) {
-        NetworkManager.deleteJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+    private func deleteJog(passedJog: Jog) {
+        NetworkManager.deleteJog(jog: passedJog) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -221,7 +216,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Delete jog success")
                     if let user = self.user {
-                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(passedUser: user)
                     }
                 }
             case .failure(let error):
@@ -235,8 +230,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func updateJog(passedJog: Jog, accessToken: String) {
-        NetworkManager.updateJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+    private func updateJog(passedJog: Jog) {
+        NetworkManager.updateJog(jog: passedJog) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -246,7 +241,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Update user success")
                     if let user = self.user {
-                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(passedUser: user)
                     }
                 }
             case .failure(let error):
@@ -258,8 +253,8 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func addJog(passedJog: Jog, accessToken: String) {
-        NetworkManager.addJog(jog: passedJog, accessToken: accessToken) { [weak self] result in
+    private func addJog(passedJog: Jog) {
+        NetworkManager.addJog(jog: passedJog) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -269,7 +264,7 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 DispatchQueue.main.async {
                     os_log(.debug, log: OSLog.default, "Add jog success")
                     if let user = self.user {
-                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(passedUser: user)
                     }
                 }
             case .failure(let error):
@@ -285,15 +280,15 @@ class JogsViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Navigation
 
     @IBAction func unwindToJogsVC(sender: UIStoryboardSegue) {
-        if let sourceViewController = sender.source as? EditJogViewController, let jog = sourceViewController.jog, let accessToken = accessToken {
+        if let sourceViewController = sender.source as? EditJogViewController, let jog = sourceViewController.jog {
             startActivityIndicator()
             if sourceViewController.indexPathForEditMode != nil {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    self?.updateJog(passedJog: jog, accessToken: accessToken)
+                    self?.updateJog(passedJog: jog)
                 }
             } else {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    self?.addJog(passedJog: jog, accessToken: accessToken)
+                    self?.addJog(passedJog: jog)
                 }
             }
         }

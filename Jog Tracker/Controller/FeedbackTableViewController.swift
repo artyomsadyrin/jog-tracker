@@ -15,7 +15,6 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
     
     @IBOutlet weak var topicIdTextField: UITextField!
     @IBOutlet weak var feedbackTextView: UITextView!
-    var accessToken: String?
     
     // MARK: Private Properties
     
@@ -205,7 +204,7 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
             return
         }
         
-        guard let topicId = pickedTopicId, let accessToken = accessToken else {
+        guard let topicId = pickedTopicId else {
             os_log(.error, log: OSLog.default, "Can't get topic id or access token")
             return
         }
@@ -217,14 +216,14 @@ class FeedbackTableViewController: UITableViewController, UITextViewDelegate, UI
             guard let feedback = self?.feedback else {
                 return
             }
-            self?.sendFeedback(passedFeedback: feedback, accessToken: accessToken)
+            self?.sendFeedback(passedFeedback: feedback)
         }
     }
     
     // MARK: Network Methods
     
-    private func sendFeedback(passedFeedback: Feedback, accessToken: String) {
-        NetworkManager.sendFeedback(feedback: passedFeedback, accessToken: accessToken) { [weak self] result in
+    private func sendFeedback(passedFeedback: Feedback) {
+        NetworkManager.sendFeedback(feedback: passedFeedback) { [weak self] result in
             guard let self = self else {
                 return
             }

@@ -14,7 +14,6 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: Public Properties
     
     var reports: [Report]?
-    var accessToken: String?
 
     @IBOutlet weak var reportTableView: UITableView!
     @IBOutlet weak var sortBarButtonItem: UIBarButtonItem! {
@@ -45,9 +44,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         reportTableView.delegate = self
         reportTableView.dataSource = self
         
-        if let accessToken = accessToken {
-            getUser(accessToken: accessToken)
-        }
+        getUser()
         
         reportTableView.refreshControl = reportsRefreshControl
         reportsRefreshControl.addTarget(self, action: #selector(refreshReportTableView(_:)), for: .valueChanged)
@@ -74,8 +71,8 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: JogsViewController Delegate
     
     func updateReportTableView() {
-        if let accessToken = accessToken, let user = user {
-            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+        if let user = user {
+            syncUsersAndJogs(passedUser: user)
         }
     }
     
@@ -113,8 +110,8 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @objc private func refreshReportTableView(_ sender: Any?) {
-        if let accessToken = accessToken, let user = user {
-            syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+        if let user = user {
+            syncUsersAndJogs(passedUser: user)
             reportsRefreshControl.endRefreshing()
         }
     }
@@ -171,11 +168,11 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: Network Methods
     
-    private func getUser(accessToken: String) {
+    private func getUser() {
         DispatchQueue.main.async { [weak self] in
             self?.startActivityIndicator()
         }
-        NetworkManager.getUser(accessToken: accessToken) { [weak self] result in
+        NetworkManager.getUser { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -186,7 +183,7 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     self.user = user
                     os_log(.debug, log: OSLog.default, "Get user success")
                     DispatchQueue.global(qos: .userInitiated).async {
-                        self.syncUsersAndJogs(accessToken: accessToken, passedUser: user)
+                        self.syncUsersAndJogs(passedUser: user)
                     }
                 }
             case .failure(let error):
@@ -198,13 +195,13 @@ class ReportViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    private func syncUsersAndJogs(accessToken: String, passedUser: User) {
+    private func syncUsersAndJogs(passedUser: User) {
         if user != nil {
             DispatchQueue.main.async { [weak self] in
                 self?.startActivityIndicator()
             }
         }
-        NetworkManager.syncUsersAndJogs(accessToken: accessToken) { [weak self] result in
+        NetworkManager.syncUsersAndJogs { [weak self] result in
             guard let self = self else {
                 return
             }

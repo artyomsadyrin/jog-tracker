@@ -116,12 +116,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         case "Show Jogs":
             if let tabBarVC = segue.destination as? UITabBarController,
                 let jogsVC = tabBarVC.viewControllers?[0].contents as? JogsViewController,
-                let feedbackTVC = tabBarVC.viewControllers?[1].contents as? FeedbackTableViewController,
                 let reportVC = tabBarVC.viewControllers?[2].contents as? ReportViewController {
-                jogsVC.accessToken = authResponse?.accessToken
                 jogsVC.delegate = reportVC
-                feedbackTVC.accessToken = authResponse?.accessToken
-                reportVC.accessToken = authResponse?.accessToken
             }
         default:
             showErrorAlert(error: LoginError.unknownSegue)

@@ -10,6 +10,8 @@ import Foundation
 
 class NetworkManager {
     
+    static private var accessToken: String?
+    
     // MARK: POST /v1/auth/uuidLogin
     
     static func uuidLogin(uuid: String, completionHandler: @escaping (Result<AuthResponse, Error>) -> Void ) {
@@ -60,6 +62,7 @@ class NetworkManager {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let codingData = try? decoder.decode(AuthResponse.CodingData.self, from: data)
                 if let codingData = codingData {
+                    accessToken = codingData.authResponse.accessToken
                     completionHandler(.success(codingData.authResponse))
                 } else {
                     completionHandler(.failure(NetworkError.failedDecodeFromJSON))
@@ -72,11 +75,15 @@ class NetworkManager {
     
     // MARK: GET /v1/auth/user
     
-    static func getUser(accessToken: String, completionHandler: @escaping (Result<User, Error>) -> Void ) {
+    static func getUser(completionHandler: @escaping (Result<User, Error>) -> Void ) {
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/auth/user")
         
         guard let url = requestURL else {
             completionHandler(.failure(NetworkError.wrongURL))
+            return
+        }
+        guard let accessToken = accessToken else {
+            completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
         
@@ -122,11 +129,15 @@ class NetworkManager {
         
     }
     
-    static func syncUsersAndJogs(accessToken: String, completionHandler: @escaping (Result<Response, Error>) -> Void ) {
+    static func syncUsersAndJogs(completionHandler: @escaping (Result<Response, Error>) -> Void ) {
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/data/sync")
         
         guard let url = requestURL else {
             completionHandler(.failure(NetworkError.wrongURL))
+            return
+        }
+        guard let accessToken = accessToken else {
+            completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
         
@@ -171,7 +182,7 @@ class NetworkManager {
         datatask.resume()
     }
     
-    static func addJog(jog: Jog, accessToken: String, completionHandler: @escaping (Result<String, Error>) -> Void ) {
+    static func addJog(jog: Jog, completionHandler: @escaping (Result<String, Error>) -> Void ) {
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/data/jog")
         
         guard let url = requestURL else {
@@ -179,7 +190,7 @@ class NetworkManager {
             return
         }
         
-        guard let date = jog.date, let time = jog.time, let distance = jog.distance else {
+        guard let date = jog.date, let time = jog.time, let distance = jog.distance, let accessToken = accessToken else {
             completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
@@ -225,9 +236,9 @@ class NetworkManager {
         datatask.resume()
     }
     
-    static func deleteJog(jog: Jog, accessToken: String, completionHandler: @escaping (Result<String, Error>) -> Void ) {
+    static func deleteJog(jog: Jog, completionHandler: @escaping (Result<String, Error>) -> Void ) {
         
-        guard let jogId = jog.identifier, let userId = jog.userId else {
+        guard let jogId = jog.identifier, let userId = jog.userId, let accessToken = accessToken else {
             completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
@@ -271,7 +282,7 @@ class NetworkManager {
         datatask.resume()
     }
     
-    static func updateJog(jog: Jog, accessToken: String, completionHandler: @escaping (Result<String, Error>) -> Void ) {
+    static func updateJog(jog: Jog, completionHandler: @escaping (Result<String, Error>) -> Void ) {
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/data/jog")
         
         guard let url = requestURL else {
@@ -279,7 +290,7 @@ class NetworkManager {
             return
         }
         
-        guard let date = jog.date, let time = jog.time, let distance = jog.distance, let jogId = jog.identifier, let userId = jog.userId else {
+        guard let date = jog.date, let time = jog.time, let distance = jog.distance, let jogId = jog.identifier, let userId = jog.userId, let accessToken = accessToken else {
             completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
@@ -325,7 +336,7 @@ class NetworkManager {
         datatask.resume()
     }
     
-    static func sendFeedback(feedback: Feedback, accessToken: String, completionHandler: @escaping (Result<String, Error>) -> Void ) {
+    static func sendFeedback(feedback: Feedback, completionHandler: @escaping (Result<String, Error>) -> Void ) {
         let requestURL = URL(string: "https://jogtracker.herokuapp.com/api/v1/feedback/send")
         
         guard let url = requestURL else {
@@ -333,7 +344,7 @@ class NetworkManager {
             return
         }
         
-        guard let text = feedback.text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+        guard let text = feedback.text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let accessToken = accessToken else {
             completionHandler(.failure(NetworkError.parameterMissing))
             return
         }
