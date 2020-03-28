@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run tests
+      run: xcodebuild -project 'Jog Tracker.xcodeproj' -scheme 'Jog Tracker' -destination 'platform=iOS Simulator, name=iPhone 8' test
+    - name: Build App
+      run: xcodebuild -project 'Jog Tracker.xcodeproj' -scheme 'Jog Tracker' -destination 'generic/platform=iOS' -configuration Release build CODE_SIGNING_ALLOWED=NO
