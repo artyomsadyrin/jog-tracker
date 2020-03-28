@@ -14,6 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run tests
-      run: xcodebuild -project 'Jog Tracker.xcodeproj' -scheme 'Jog Tracker' -destination 'platform=iOS Simulator,name=iPhone 8' test
+      run: swift build -v
     - name: Build App
       run: xcodebuild -project 'Jog Tracker.xcodeproj' -scheme 'Jog Tracker' -destination 'generic/platform=iOS' -configuration Release build CODE_SIGNING_ALLOWED=NO
